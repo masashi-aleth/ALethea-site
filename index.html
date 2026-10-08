@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>ALethea | سيرفر Discord</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="glow" aria-hidden="true"><i></i><i></i></div>
+<header><div class="bar">
+  <a class="logo" href="#/">A<b>Lethea</b></a>
+  <button class="menu" id="menu" aria-label="القائمة" aria-expanded="false">☰</button>
+  <nav id="nav">
+    <a href="#/" data-r="home">الرئيسية</a>
+    <a href="#/about" data-r="about">عن السيرفر</a>
+    <a href="#/admin" data-r="admin" data-admin hidden>لوحة التحكم</a>
+    <a href="#/login" data-r="login" data-guest>تسجيل الدخول</a>
+    <a href="#/register" class="btn" data-guest style="color:#fff;padding:7px 16px">إنشاء حساب</a>
+    <span class="who" id="who" data-user hidden></span>
+    <button class="btn ghost" id="logout" data-user hidden style="padding:7px 16px">خروج</button>
+  </nav>
+</div></header>
+
+<main>
+<!-- HOME -->
+<section class="view" id="home">
+  <div class="hero">
+    <h1 class="mark" aria-label="ALethea">ALethea<span aria-hidden="true">ALethea</span></h1>
+    <p>مجتمع عربي للحوار والألعاب والمشاريع. ادخل، تعرّف على الناس، وشارك بما تحب.</p>
+    <div class="cta">
+      <a class="btn join" href="#" target="_blank" rel="noopener">انضم إلى Discord</a>
+      <a class="btn ghost" href="#/about">تعرّف على السيرفر</a>
+    </div>
+    <div class="live" id="live" hidden><span><i class="dot"></i><b id="online">0</b> متصل الآن</span></div>
+  </div>
+  <div class="rows">
+    <div class="row"><h3>دردشة</h3><p>قنوات نقاش مفتوحة بجو هادئ ومنظم، مع مشرفين متواجدين.</p></div>
+    <div class="row"><h3>فعاليات</h3><p>مسابقات وسهرات ألعاب وجلسات صوتية كل أسبوع.</p></div>
+    <div class="row"><h3>مشاريع</h3><p>مساحة لعرض أعمالك وطلب الملاحظات من الأعضاء.</p></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="view" id="about" style="padding-top:44px">
+  <h2>عن السيرفر</h2>
+  <p class="sub">كل ما تحتاج معرفته قبل الانضمام.</p>
+  <div class="grid2">
+    <div class="panel"><h3 style="margin-top:0">القنوات</h3>
+      <ul class="list">
+        <li><span># الترحيب</span><small>ابدأ من هنا</small></li>
+        <li><span># العام</span><small>نقاش حر</small></li>
+        <li><span># الألعاب</span><small>فرق وأخبار</small></li>
+        <li><span># المشاريع</span><small>اعرض عملك</small></li>
+        <li><span>🔊 غرفة الصوت</span><small>جلسات مباشرة</small></li>
+      </ul></div>
+    <div class="panel"><h3 style="margin-top:0">القوانين</h3>
+      <ul class="list">
+        <li>احترام جميع الأعضاء</li>
+        <li>ممنوع الإعلانات دون إذن</li>
+        <li>لا للمحتوى المسيء أو المخالف</li>
+        <li>اتبع تعليمات المشرفين</li>
+      </ul></div>
+  </div>
+  <div class="panel" style="margin-top:18px"><h3 style="margin-top:0">الرتب</h3>
+    <ul class="list">
+      <li><span>المالك</span><span class="tag">إدارة كاملة</span></li>
+      <li><span>مشرف</span><span class="tag">إدارة المحادثات</span></li>
+      <li><span>عضو</span><span class="tag">وصول عام</span></li>
+    </ul>
+    <div class="cta" style="margin-top:18px;justify-content:flex-start"><a class="btn join" href="#" target="_blank" rel="noopener">انضم الآن</a></div>
+  </div>
+  
+</section>
+
+<!-- LOGIN -->
+<section class="view" id="login">
+  <div class="auth panel">
+    <h2>تسجيل الدخول</h2>
+    <button class="btn discord" type="button" data-discord>المتابعة عبر Discord</button>
+    <div class="or">أو بالبريد</div>
+    <form data-f="login" novalidate>
+      <label for="le">البريد الإلكتروني</label><input id="le" name="email" type="email" autocomplete="email" dir="ltr">
+      <div class="err"></div>
+      <label for="lp">كلمة المرور</label><input id="lp" name="pass" type="password" autocomplete="current-password" dir="ltr">
+      <div class="err"></div>
+      <div class="msg" aria-live="polite"></div>
+      <button class="btn" type="submit">دخول</button>
+    </form>
+    <div class="alt">ليس لديك حساب؟ <a href="#/register">أنشئ حساباً</a></div>
+  </div>
+</section>
+
+<!-- REGISTER -->
+<section class="view" id="register">
+  <div class="auth panel">
+    <h2>إنشاء حساب</h2>
+    <button class="btn discord" type="button" data-discord>المتابعة عبر Discord</button>
+    <div class="or">أو بالبريد</div>
+    <form data-f="register" novalidate>
+      <label for="rn">اسم المستخدم</label><input id="rn" name="name" type="text" autocomplete="username" dir="ltr">
+      <div class="err"></div>
+      <label for="re">البريد الإلكتروني</label><input id="re" name="email" type="email" autocomplete="email" dir="ltr">
+      <div class="err"></div>
+      <label for="rp">كلمة المرور (8 أحرف على الأقل)</label><input id="rp" name="pass" type="password" autocomplete="new-password" dir="ltr">
+      <div class="err"></div>
+      <div class="msg" aria-live="polite"></div>
+      <button class="btn" type="submit">إنشاء الحساب</button>
+    </form>
+    <div class="alt">لديك حساب؟ <a href="#/login">سجّل الدخول</a></div>
+  </div>
+</section>
+
+<!-- ADMIN -->
+<section class="view" id="admin" style="padding-top:36px">
+  <h2>لوحة التحكم</h2>
+  <div class="note" id="adminDenied">هذه الصفحة للإداريين فقط.</div>
+  <div id="adminBody" hidden>
+  <div class="tabs" role="tablist">
+    <button class="on" data-t="t1">نظرة عامة</button>
+    <button data-t="t2">الأعضاء</button>
+    <button data-t="t3">الإعدادات</button>
+  </div>
+  <div class="tab on" id="t1">
+    <div class="stats">
+      <div class="stat"><b id="sTotal">0</b><span>الحسابات</span></div>
+      <div class="stat"><b id="sWeek">0</b><span>جدد هذا الأسبوع</span></div>
+      <div class="stat"><b id="sAdmins">0</b><span>المدراء</span></div>
+      <div class="stat"><b id="sDiscord">0</b><span>سجّلوا عبر Discord</span></div>
+    </div>
+    <div class="panel chartwrap"><h3 style="margin-top:0">التسجيلات الجديدة خلال 7 أيام</h3><div class="chart" id="chart"></div></div>
+  </div>
+  <div class="tab" id="t2"><div class="panel scroll">
+    <table class="tbl"><thead><tr><th>الاسم</th><th>الدخول</th><th>الرتبة</th><th>إجراء</th></tr></thead><tbody id="members"></tbody></table></div></div>
+  <div class="tab" id="t3"><div class="panel">
+    <div class="set"><div>رسالة ترحيب تلقائية<small>تظهر للأعضاء الجدد</small></div><div class="sw" data-key="welcome_message" role="switch" tabindex="0" aria-checked="false"></div></div>
+    <div class="set"><div>تفعيل التحقق<small>قبل السماح بالكتابة</small></div><div class="sw" data-key="verification" role="switch" tabindex="0" aria-checked="false"></div></div>
+    <div class="set"><div>سجل المشرفين<small>تسجيل الإجراءات الإدارية</small></div><div class="sw" data-key="mod_log" role="switch" tabindex="0" aria-checked="false"></div></div>
+  </div><p class="sub" style="margin-top:12px;font-size:.85rem">تُحفظ التبديلات في قاعدة البيانات فوراً.</p></div>
+  </div>
+</section>
+</main>
+
+<footer>© ALethea — موقع مجتمعي غير رسمي، وغير تابع لشركة Discord.</footer>
+<div id="toast" role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
