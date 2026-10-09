@@ -746,7 +746,7 @@ function start() {
   $("#langBtn").addEventListener("click", () => setLang(lang === "ar" ? "en" : "ar"));
   $("#dockMore").addEventListener("click", () => { $("#menu").click(); });
   document.addEventListener("keydown", e => { if (e.key === "Escape") openThemePanel(false); });
-  document.addEventListener("click", e => { const p = $("#themePanel"); if (p.classList.contains("open") && !p.contains(e.target) && !e.target.closest("#themeBtn")) openThemePanel(false); });
+  document.addEventListener("click", e => { const p = $("#themePanel"); if (!e.target.isConnected) return; if (p.classList.contains("open") && !p.contains(e.target) && !e.target.closest("#themeBtn")) openThemePanel(false); });
   addEventListener("alethea:route", e => handle(e.detail));
   // close the mobile menu after choosing a link
   $("#nav").addEventListener("click", e => { if (e.target.closest("a")) { $("#nav").classList.remove("open"); $("#menu").setAttribute("aria-expanded", "false"); } });

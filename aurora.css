@@ -420,7 +420,8 @@ footer{background:rgba(3,5,18,.5);padding:34px 18px 26px;text-align:start}
   .drow.noimg{grid-template-columns:1fr}
   .row2{grid-template-columns:1fr}
   .sheet{border-radius:24px 24px 0 0}
-  .ibtn.langb,.ibtn.dashb{display:none}
+  .ibtn.dashb{display:none}
+  .ibtn.langb{width:auto;min-width:42px;padding:0 10px;font-size:.8rem}
 }
 @media(max-width:420px){
   .pgrid{grid-template-columns:1fr 1fr;gap:10px}
