@@ -33,16 +33,22 @@ if (ready(C.DISCORD_GUILD_ID) && /^\d+$/.test(C.DISCORD_GUILD_ID)) {
 }
 
 // التنقل
-const routes = ["home", "about", "login", "register", "admin"];
+// المسارات تُقرأ من عناصر .view في الصفحة (تمت إضافة صفحات جديدة). الأسماء المستعارة تفتح قسماً داخل صفحة المجتمع.
+const routes = $$(".view").map(v => v.id);
+const alias = { youtube: "community", discord: "community", instagram: "community" };
+const group = { product: "store", cart: "store", checkout: "store" };
 function route(top = true) {
-  let id = location.hash.replace("#/", "") || "home";
+  const seg = location.hash.replace(/^#\/?/, "").split("/");
+  const name = seg[0] || "home";
+  let id = alias[name] || name;
   if (!routes.includes(id)) id = "home";
   if (session && (id === "login" || id === "register")) { location.hash = "#/"; return; }
   $$(".view").forEach(v => v.classList.toggle("on", v.id === id));
-  $$("nav a[data-r]").forEach(a => a.classList.toggle("on", a.dataset.r === id));
+  $$("nav a[data-r], .dock a[data-r]").forEach(a => a.classList.toggle("on", a.dataset.r === (group[id] || id)));
   $("#nav").classList.remove("open"); $("#menu").setAttribute("aria-expanded", "false");
   if (top) scrollTo(0, 0);
   if (id === "admin") renderAdmin();
+  window.dispatchEvent(new CustomEvent("alethea:route", { detail: { id, name, param: seg.slice(1).join("/") } }));
 }
 addEventListener("hashchange", () => route());
 $("#menu").onclick = () => { const o = $("#nav").classList.toggle("open"); $("#menu").setAttribute("aria-expanded", o); };
