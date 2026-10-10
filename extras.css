@@ -36,3 +36,37 @@ footer{position:relative}
 footer::before{content:"";position:absolute;inset-inline:0;top:0;height:1px;background:linear-gradient(90deg,transparent,#3b82f6,#8b5cf6,#10d9a0,transparent);opacity:.7}
 html.pro-lite *{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
 html.pro-lite .pcard::after{display:none}
+
+/* Phase 11: support center + notification bell */
+.sup{max-width:760px;margin:0 auto;padding:24px 16px 80px}
+.sup-card{margin:16px 0;padding:16px;border-radius:16px;border:1px solid rgba(255,255,255,.12);background:var(--surface,rgba(255,255,255,.05))}
+.sup-card h2{margin:0 0 10px;font-size:1.1rem}
+.sup-f{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.sup input,.sup select,.sup textarea{width:100%;padding:11px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:inherit;font:inherit}
+.sup-row{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px;border-radius:10px;color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.08)}
+.sup-row.unread{border-inline-start:3px solid #10d9a0;font-weight:600}
+.sup-row small,.sup-meta,.sup-msg small{opacity:.65}
+.sup-thread{display:flex;flex-direction:column;gap:10px;margin:16px 0}
+.sup-msg{max-width:88%;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,.07);align-self:flex-start}
+.sup-msg.staff{align-self:flex-end;background:rgba(59,130,246,.2)}
+.sup-msg p{margin:4px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.sup-bar{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.sup-warn{color:#ffc86b}.sup-badge{display:inline-block;padding:4px 12px;border-radius:99px;border:1px solid rgba(255,255,255,.2)}
+.sup-faq{margin:12px 0;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.12)}
+.sup-bell{position:relative;display:inline-flex;align-items:center;justify-content:center;color:inherit}
+.sup-bell svg{width:20px;height:20px}
+.sup-n{position:absolute;top:-4px;inset-inline-end:-4px;min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:#10d9a0;color:#031;font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+
+/* Phase 12: operations page + hero search hint */
+.ops{max-width:920px}
+.ops-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
+.ops-card{padding:16px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:var(--surface,rgba(255,255,255,.05));display:flex;flex-direction:column;gap:4px}
+.ops-card b{font-size:1.8rem}.ops-card small{opacity:.7}
+.ops-bar{display:grid;grid-template-columns:150px 1fr;gap:10px;align-items:center;margin:8px 0;font-size:.9rem}
+.ops-bar i{display:block;height:10px;border-radius:6px;background:var(--grad,#10d9a0);min-width:3px}
+.ops-scroll{overflow-x:auto;margin:12px 0}.ops table{width:100%;border-collapse:collapse;font-size:.88rem}
+.ops th,.ops td{text-align:start;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.08);white-space:nowrap}
+.ops tr.crit td{color:#ffc86b}
+.pro-hint{margin-top:14px;display:inline-flex;gap:8px;align-items:center;padding:7px 14px;border-radius:99px;border:1px solid rgba(255,255,255,.2);background:transparent;color:inherit;font:inherit;font-size:.88rem;cursor:pointer}
+.pro-hint kbd{font:inherit;padding:1px 7px;border-radius:6px;border:1px solid rgba(255,255,255,.3);opacity:.85}
+@media (hover:none){.pro-hint kbd{display:none}}

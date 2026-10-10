@@ -1,7 +1,7 @@
 # موقع ALethea: دليل الإعداد
 
 الملفات التي ترفعها إلى GitHub (كلها في نفس المجلد الرئيسي):
-`index.html` `style.css` `aurora.css` `aurora-foundation.css` `welcome.css` `welcome.js` `multiverse.css` `multiverse.js` `polish.css` `extras.css` `extras.js` `config.js` `app.js` `data.js` `alethea.js` `dashboard.js` `README.md` `CLAUDE.md` `ALETHEA_PROGRESS.md`.
+`index.html` `style.css` `aurora.css` `aurora-foundation.css` `welcome.css` `welcome.js` `multiverse.css` `multiverse.js` `polish.css` `extras.css` `extras.js` `account-sync.js` `support.js` `ops.js` `config.js` `app.js` `data.js` `alethea.js` `dashboard.js` `README.md` `CLAUDE.md` `ALETHEA_PROGRESS.md`.
 أما `schema.sql` و`schema_products.sql` فيُشغَّلان في Supabase ولا يلزم رفعهما (ارفعهما إن أردت حفظهما بالريبو).
 
 ما يفعله كل جزء: شاشة الترحيب (`welcome.*`)، بوابات العوالم في الرئيسية (`multiverse.*`)، المتجر التجريبي (`alethea.js` و`data.js`)، لوحة تجريبية `#/dashboard` (`dashboard.js`)، لوحة أعضاء حقيقية `#/admin` (`app.js` مع Supabase).
@@ -37,3 +37,12 @@
 - حماية `#/admin` الحقيقية هي سياسات RLS في قاعدة البيانات.
 - اللوحة التجريبية `#/dashboard` بلا تسجيل دخول وتحفظ في متصفح الزائر فقط.
 - مفتاح anon علني بطبيعته. إن تسرّب Client Secret أو service_role غيّرهما فوراً.
+
+## 8) مزامنة المظهر مع الحساب (المرحلة 10)
+بعد `schema.sql` شغّل `schema_account.sql` في SQL Editor. بعدها أي مستخدم مسجّل دخوله، يُحفظ مظهره (الألوان والإضاءة والحركة) في حسابه ويرجع له على أي جهاز. الزائر غير المسجّل يبقى مظهره بمتصفحه فقط. بدون تشغيل الملف لا يحدث شيء ولا ظهور أخطاء.
+
+## 9) مركز الدعم والإشعارات (المرحلة 11)
+بعد `schema.sql` شغّل `schema_support.sql` في SQL Editor. بعدها يظهر رابط «الدعم» وجرس الإشعارات للمستخدم المسجّل، ويفتح تذاكر ويتابع الردود في `#/support`. المدير (role = admin) يرى كل التذاكر ويرد ويغيّر الحالة والأولوية. لا تُرسل رسائل بريد؛ الإشعارات داخل الموقع فقط. بدون تشغيل الملف تظهر رسالة «الدعم غير مُفعّل».
+
+## 10) سجل الأحداث ولوحة العمليات (المرحلة 12)
+بعد `schema_support.sql` شغّل `schema_audit.sql`. بعدها يظهر للمدير رابط «العمليات» (`#/ops`): أرقام الأعضاء والتذاكر، رسم للتذاكر حسب الحالة، فحص اتصال قاعدة البيانات، وسجل أحداث قابل للبحث والتصفية مع تصدير CSV. السجل يقرؤه المدراء فقط ولا أحد يعدّله أو يحذفه. يُسجَّل: فتح التذاكر والردود وتغيير الحالة/الأولوية وتغيير أدوار الأعضاء (بدون نص الرسائل). أحداث تسجيل الدخول تُراجَع من Authentication > Logs في Supabase.

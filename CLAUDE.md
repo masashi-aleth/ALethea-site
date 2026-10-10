@@ -57,3 +57,12 @@ Serve with `python3 -m http.server` and drive with Playwright (Chromium is avail
 | File | Role |
 |---|---|
 | `extras.css` / `extras.js` | Additive layer: quick search (Ctrl/Cmd+K or "/", header button; matches AR + EN names and tags), info bar + "recently viewed" on `#/store` (`alethea.recent.v1`), home FAQ (`<details>`, own ar/en text, only true statements about the demo). `index.html` also gained Open Graph / Twitter / canonical / WebSite JSON-LD (needs `og.png` in the repo root). |
+
+## Stage 10 addition (account persistence)
+`schema_account.sql` creates `user_settings` (own-row RLS only). `account-sync.js` (loads after `extras.js`): when `alethea:auth` fires and a Supabase session exists, the account's saved theme is applied (only known keys, hex colors and clamped numbers are accepted), or this device's theme is uploaded if the account has none; later changes are upserted (checked every 2.5 s while the tab is visible). Language is NOT synced yet. If the table is missing it silently does nothing.
+
+## Stage 11 addition (support + notifications)
+`schema_support.sql`: `support_tickets`, `ticket_messages`, `notifications`. RLS: owner or `is_admin()` reads/replies; only admins update status/priority; clients cannot insert notifications. Triggers set `author_id`/`is_staff` server-side, move ticket status on replies, and create notifications. `support.js` adds view `#support` (section in `index.html`), nav link, header bell (polls every 60 s). Ticket detail route: `#/support/<uuid>`. Not built yet: assignment to agents, attachments, email.
+
+## Stage 12 addition (audit log + operations)
+`schema_audit.sql`: `audit_log` (admin-read RLS, append-only trigger, written only by definer triggers on tickets/messages/profiles.role). `ops.js`: view `#ops` (admin only in UI, RLS on the server), overview counts, status bars, DB latency check, filterable/paginated log, spreadsheet-safe CSV export. `extras.js` also adds a hero search hint button. Welcome screen and hero were left as they were (they already match the spec).

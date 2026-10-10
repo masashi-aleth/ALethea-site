@@ -56,3 +56,12 @@ Added `extras.css`/`extras.js`, Open Graph + JSON-LD in `index.html`. Checked: s
 
 ## Phase 9b: DONE (tested, Chromium 1280px)
 Added to `extras.css`/`extras.js`: mouse-only spotlight glow on `.pcard`, a gradient light line on the footer, and a `pro-lite` class on weak devices (4 or fewer cores, 2 GB or less RAM, or Data Saver) that disables backdrop blur. Research notes: Awwwards/trend pages were read via search results only; individual award sites were not opened.
+
+## Stage 10 (account theme sync): DONE, tested with a MOCK Supabase client only
+Checked: remote theme applied, hostile values ignored/clamped, own-id upsert after a change, first-login upload. NOT checked: real Supabase (run `schema_account.sql`, sign in on two devices). Not started: tickets, roles/admin rebuild, audit log, notifications, AI assistant, email verification settings, maintenance mode.
+
+## Stage 11 (support tickets + notifications): DONE, UI tested with a MOCK client only
+12 UI checks passed (login gate, create ticket, reply, admin list/status save, bell count, mark-all-read, missing-table message, no overflow, no JS errors). The SQL was NOT run on any database (no Postgres here): run `schema_support.sql` in Supabase and test with two accounts (one admin). Not built: agent assignment, attachments, email.
+
+## Stage 12 (audit log + operations page + hero search hint): DONE, UI tested with a MOCK client only
+10 UI checks passed (hint, non-admin denied, overview numbers, health, pagination, filter, CSV, English, no overflow, no JS errors). `schema_audit.sql` NOT run on a real database. Still open: agent assignment, attachments, email, AI assistant, maintenance mode, user suspension, auth-event logging (use Supabase Auth logs).
