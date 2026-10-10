@@ -52,3 +52,8 @@ Serve with `python3 -m http.server` and drive with Playwright (Chromium is avail
 - Optional Supabase products: `loadRemote()` in `alethea.js` reads `products` (public sees published only); `remoteSave/remoteDelete` write only for admins. If the table is missing the site silently keeps local demo data.
 - `polish.css` loads last (wishlist, promo bar, small-phone header fixes).
 - `schema_products.sql` is run manually in Supabase after `schema.sql`.
+
+## Phase 9 addition
+| File | Role |
+|---|---|
+| `extras.css` / `extras.js` | Additive layer: quick search (Ctrl/Cmd+K or "/", header button; matches AR + EN names and tags), info bar + "recently viewed" on `#/store` (`alethea.recent.v1`), home FAQ (`<details>`, own ar/en text, only true statements about the demo). `index.html` also gained Open Graph / Twitter / canonical / WebSite JSON-LD (needs `og.png` in the repo root). |

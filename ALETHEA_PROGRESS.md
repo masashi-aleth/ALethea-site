@@ -50,3 +50,9 @@ Not tested: real Android device, real Supabase login/admin.
 
 ## Next
 Optional: real-device pass, product ratings/reviews (needs a data model), more products/images. Ask for what you want next.
+
+## Phase 9: DONE (tested with the real repo, 390px, Chromium)
+Added `extras.css`/`extras.js`, Open Graph + JSON-LD in `index.html`. Checked: search button, search by English name while the UI is Arabic, Enter opens the product, recently viewed shows on the store, FAQ rebuilds in English, no overflow, no JS errors. NOT checked: real phone, `og.png` (not created yet).
+
+## Phase 9b: DONE (tested, Chromium 1280px)
+Added to `extras.css`/`extras.js`: mouse-only spotlight glow on `.pcard`, a gradient light line on the footer, and a `pro-lite` class on weak devices (4 or fewer cores, 2 GB or less RAM, or Data Saver) that disables backdrop blur. Research notes: Awwwards/trend pages were read via search results only; individual award sites were not opened.
