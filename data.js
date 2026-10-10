@@ -111,7 +111,11 @@ window.ALETHEA_SEED = {
       body: { ar: "ربط قاعدة بيانات حقيقية وحسابات للمدراء يأتي في مرحلة لاحقة، بعد الاختبار.", en: "A real database and admin accounts come in a later stage, after testing." } }
   ],
   // أقسام الصفحة الرئيسية: true = ظاهر
-  sections: { stats: true, explore: true, featured: true, projects: true, tools: true, services: true, news: true, community: true },
+  sections: { stats: true, explore: true, featured: true, projects: true, tools: true, services: true, news: true, community: true, welcome: true },
   // روابط تجريبية. اتركها فارغة حتى تضع روابطك الحقيقية من لوحة التحكم > الروابط.
-  socials: { youtube: "", instagram: "", discord: "", website: "", email: "" }
+  socials: { youtube: "", instagram: "", discord: "", website: "", email: "" },
+  // عوالم بوابة الكون المتعدد: show = ظاهر، status = open | demo | exp | dev | unk
+  worlds: { store: { show: true, status: "demo" }, projects: { show: true, status: "demo" }, tools: { show: true, status: "exp" }, services: { show: true, status: "dev" }, community: { show: true, status: "open" }, about: { show: true, status: "open" }, unk: { show: true, status: "unk" } },
+  // شريط عرض اختياري أعلى الموقع
+  promo: { on: false, text: { ar: "", en: "" }, link: "" }
 };

@@ -10,7 +10,7 @@ const clone = o => JSON.parse(JSON.stringify(o));
 const clamp = (n, a, b) => Math.min(b, Math.max(a, n));
 
 /* ---------------- storage (always guarded) ---------------- */
-const KEYS = { data: "alethea.data.v1", theme: "alethea.theme.v1", lang: "alethea.lang", cart: "alethea.cart.v1", log: "alethea.log.v1" };
+const KEYS = { data: "alethea.data.v1", theme: "alethea.theme.v1", lang: "alethea.lang", cart: "alethea.cart.v1", log: "alethea.log.v1", wish: "alethea.wish.v1" };
 const mem = {};
 const st = {
   get(k) { try { return localStorage.getItem(k); } catch (e) { return k in mem ? mem[k] : null; } },
@@ -84,7 +84,11 @@ ar: {
   "theme.reduced": "جهازك يطلب تقليل الحركة، لذلك الحركة متوقفة.", "theme.close": "إغلاق", "theme.preview": "معاينة",
   "tp.ocean": "أوشن", "tp.aurora": "أورورا", "tp.emerald": "إميرالد", "tp.violet": "فيوليت",
   "ord.bgp": "أزرق ← أخضر ← بنفسجي", "ord.pbg": "بنفسجي ← أزرق ← أخضر", "ord.gpb": "أخضر ← بنفسجي ← أزرق",
-  "toast.theme": "تم حفظ الثيم", "empty.go": "افتح المتجر"
+  "toast.theme": "تم حفظ الثيم", "empty.go": "افتح المتجر",
+  "wish.add": "أضف إلى المفضلة", "wish.saved": "المفضلة", "wish.added": "أُضيف إلى المفضلة", "wish.removed": "أُزيل من المفضلة",
+  "wish.emptyT": "لا توجد منتجات محفوظة", "wish.emptyP": "اضغط على القلب في أي منتج ليظهر هنا.",
+  "store.bannerLive": "المنتجات من قاعدة البيانات، لكن السلة والدفع محاكاة فقط ولا يتم أي تحصيل مالي.",
+  "p.demoLive": "الشراء محاكاة في هذه النسخة: لا يوجد دفع ولا تسليم فعلي."
 },
 en: {
   skip: "Skip to content", "nav.home": "Home", "nav.explore": "Explore", "nav.store": "Demo Store", "nav.projects": "Projects",
@@ -147,7 +151,11 @@ en: {
   "theme.reduced": "Your device asks for reduced motion, so motion is paused.", "theme.close": "Close", "theme.preview": "Preview",
   "tp.ocean": "Ocean", "tp.aurora": "Aurora", "tp.emerald": "Emerald", "tp.violet": "Violet",
   "ord.bgp": "Blue → Green → Violet", "ord.pbg": "Violet → Blue → Green", "ord.gpb": "Green → Violet → Blue",
-  "toast.theme": "Theme saved", "empty.go": "Open the store"
+  "toast.theme": "Theme saved", "empty.go": "Open the store",
+  "wish.add": "Save to wishlist", "wish.saved": "Saved", "wish.added": "Saved to wishlist", "wish.removed": "Removed from wishlist",
+  "wish.emptyT": "Nothing saved yet", "wish.emptyP": "Tap the heart on any product and it will show up here.",
+  "store.bannerLive": "Products come from the database, but cart and checkout are simulations only and nothing is ever charged.",
+  "p.demoLive": "Buying is simulated in this version: no payment and no real delivery."
 }};
 let lang = (() => { const v = st.get(KEYS.lang); return v === "en" || v === "ar" ? v : "ar"; })();
 const t = (k, vars) => { let s = (T[lang] && T[lang][k]) ?? T.ar[k] ?? k; if (vars) for (const x in vars) s = s.replace("{" + x + "}", vars[x]); return s; };
@@ -202,6 +210,9 @@ function migrate(d) {
   for (const k of ["categories", "products", "projects", "announcements", "tools", "services"]) out[k] = Array.isArray(d[k]) ? d[k] : base[k];
   out.sections = Object.assign({}, base.sections, d.sections || {});
   out.socials = Object.assign({}, base.socials, d.socials || {});
+  out.worlds = Object.assign({}, base.worlds, d.worlds || {});
+  out.promo = Object.assign({}, base.promo, d.promo || {});
+  out.promo.text = Object.assign({ ar: "", en: "" }, out.promo.text || {});
   out.version = base.version;
   return out;
 }
@@ -209,6 +220,23 @@ let data = migrate(load(KEYS.data, null));
 let cart = (() => { const c = load(KEYS.cart, []); return Array.isArray(c) ? c.filter(x => x && typeof x.id === "string" && x.qty > 0) : []; })();
 let logs = (() => { const l = load(KEYS.log, []); return Array.isArray(l) ? l : []; })();
 const saveData = () => save(KEYS.data, data);
+
+/* ---------------- wishlist (this browser only) + remote flag ---------------- */
+let remote = false; // true when products were loaded from Supabase
+let wish = (() => { const w = load(KEYS.wish, []); return Array.isArray(w) ? w.filter(x => typeof x === "string") : []; })();
+const isWish = id => wish.includes(id);
+const wishCount = () => wish.filter(x => data.products.some(p => p.id === x && p.status === "published")).length;
+function toggleWish(id) {
+  const on = !isWish(id); wish = on ? [...wish, id] : wish.filter(x => x !== id); save(KEYS.wish, wish);
+  $$('[data-wish="' + id + '"]').forEach(b => { b.classList.toggle("on", on); b.setAttribute("aria-pressed", String(on)); });
+  const sc = $("#savedCount"); if (sc) sc.textContent = String(wishCount());
+  toast(t(on ? "wish.added" : "wish.removed"));
+  if (!on && sf.wish && cur.id === "store") renderStore();
+}
+function wishBtn(p, big) {
+  const on = isWish(p.id);
+  return h("button", { class: "wishbtn" + (big ? " lg" : "") + (on ? " on" : ""), type: "button", "data-wish": p.id, "aria-pressed": String(on), "aria-label": t("wish.add") + ": " + loc(p.name), onclick: e => { e.stopPropagation(); toggleWish(p.id); } }, icon("heart"));
+}
 function log(msg) { logs.unshift({ t: Date.now(), m: msg }); logs = logs.slice(0, 100); save(KEYS.log, logs); }
 
 /* ---------------- art generator (placeholder images, no external files) ---------------- */
@@ -438,13 +466,13 @@ function empty(title, text, btnText, btnTo, ic) {
 }
 function priceEl(p, big) {
   const free = cents(p.price) === 0;
-  return h("span", { class: "price" + (free ? " free" : "") }, priceText(p), (!free && Number(p.oldPrice) > Number(p.price)) ? h("span", { class: "old" }, money(cents(p.oldPrice))) : null);
+  return h("span", { class: "price" + (free ? " free" : "") }, priceText(p), (!free && Number(p.oldPrice) > Number(p.price)) ? [h("span", { class: "old" }, money(cents(p.oldPrice))), h("span", { class: "off" }, "-" + Math.round((1 - Number(p.price) / Number(p.oldPrice)) * 100) + "%")] : null);
 }
 function productCard(p) {
   const cat = catOf(p.cat), badge = loc(p.badge), canBuy = p.avail !== "soon";
   const card = h("article", { class: "pcard tilt", onclick: e => { if (!e.target.closest("button,a")) go("product/" + p.id); } },
     h("div", { class: "pimg" }, h("img", { src: productImg(p), alt: "", loading: "lazy", width: 800, height: 600 }), badge ? h("span", { class: "pbadge" }, badge) : null,
-      h("span", { class: "avail " + (p.avail === "available" ? "ok" : p.avail) }, t("avail." + p.avail))),
+      h("span", { class: "avail " + (p.avail === "available" ? "ok" : p.avail) }, t("avail." + p.avail)), wishBtn(p)),
     h("div", { class: "pbody" }, h("span", { class: "pcat" }, cat ? loc(cat.name) : ""),
       h("h3", { class: "pname" }, h("a", { href: "#/product/" + p.id }, loc(p.name))),
       h("div", { class: "tagrow" }, (p.tags || []).slice(0, 2).map(x => h("span", { class: "tg" }, x))),
@@ -511,11 +539,11 @@ function renderExplore() {
 }
 
 /* store */
-const sf = { q: "", cat: "all", tags: [], avail: "all", sort: "featured" };
+const sf = { q: "", cat: "all", tags: [], avail: "all", sort: "featured", wish: false };
 let storeFirst = true;
 function filtered() {
   const q = sf.q.trim().toLowerCase();
-  let l = published().filter(p => (sf.cat === "all" || p.cat === sf.cat) && (sf.avail === "all" || p.avail === sf.avail) && sf.tags.every(x => (p.tags || []).includes(x)) &&
+  let l = published().filter(p => (!sf.wish || isWish(p.id)) && (sf.cat === "all" || p.cat === sf.cat) && (sf.avail === "all" || p.avail === sf.avail) && sf.tags.every(x => (p.tags || []).includes(x)) &&
     (!q || [loc(p.name), p.name.ar, p.name.en, loc(p.desc), (p.tags || []).join(" ")].join(" ").toLowerCase().includes(q)));
   const idx = new Map(data.products.map((p, i) => [p.id, i]));
   const by = { featured: (a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || idx.get(a.id) - idx.get(b.id), newest: (a, b) => idx.get(b.id) - idx.get(a.id),
@@ -525,12 +553,12 @@ function filtered() {
 function renderStore(param) {
   if (param && (param === "all" || catOf(param))) sf.cat = param;
   const root = clear($("#storeRoot")), pub = published();
-  root.append(pagehead(t("nav.store"), t("store.title"), t("store.sub")), banner(t("store.banner")));
+  root.append(pagehead(t("nav.store"), t("store.title"), t("store.sub")), banner(t(remote ? "store.bannerLive" : "store.banner")));
   if (!pub.length) { root.append(empty(t("store.noneT"), t("store.noneP"), t("nav.dashboard"), "dashboard", "box")); return; }
   const results = h("div", { id: "storeResults" });
   const allTags = [...new Set(pub.flatMap(p => p.tags || []))].sort().slice(0, 14);
   const chipsEl = h("div", { class: "chips", role: "group", "aria-label": t("store.cat") });
-  const drawChips = () => { clear(chipsEl).append(h("button", { type: "button", class: "chip" + (sf.cat === "all" ? " on" : ""), onclick: () => { sf.cat = "all"; drawChips(); draw(); } }, t("store.all")),
+  const drawChips = () => { clear(chipsEl).append(h("button", { type: "button", class: "chip" + (sf.cat === "all" ? " on" : ""), onclick: () => { sf.cat = "all"; drawChips(); draw(); } }, t("store.all")), h("button", { type: "button", class: "chip" + (sf.wish ? " on" : ""), "aria-pressed": String(sf.wish), onclick: () => { sf.wish = !sf.wish; drawChips(); draw(); } }, icon("heart"), t("wish.saved") + " ", h("b", { id: "savedCount" }, String(wishCount()))),
     ...data.categories.filter(c => pub.some(p => p.cat === c.id)).map(c => h("button", { type: "button", class: "chip" + (sf.cat === c.id ? " on" : ""), onclick: () => { sf.cat = c.id; drawChips(); draw(); } }, icon(c.icon || "box"), loc(c.name)))); };
   const tagsEl = h("div", { class: "chips", role: "group", "aria-label": t("store.tags") });
   const drawTags = () => { clear(tagsEl).append(...allTags.map(x => h("button", { type: "button", class: "chip t" + (sf.tags.includes(x) ? " on" : ""), onclick: () => { sf.tags = sf.tags.includes(x) ? sf.tags.filter(y => y !== x) : [...sf.tags, x]; drawTags(); draw(); } }, "#" + x))); };
@@ -543,13 +571,13 @@ function renderStore(param) {
     chipsEl, allTags.length ? tagsEl : null), results);
   drawChips(); drawTags();
   function draw() {
-    const l = filtered(), active = sf.q || sf.cat !== "all" || sf.avail !== "all" || sf.tags.length;
+    const l = filtered(), active = sf.q || sf.cat !== "all" || sf.avail !== "all" || sf.tags.length || sf.wish;
     clear(results);
     const head = h("div", { class: "subhead" }, h("h2", null, active ? t("store.results", { n: l.length }) : t("store.allProducts")),
-      active ? h("button", { type: "button", class: "btn ghost sm", onclick: () => { Object.assign(sf, { q: "", cat: "all", tags: [], avail: "all", sort: "featured" }); search.value = ""; renderStore(); } }, icon("x"), t("store.clear")) : null);
+      active ? h("button", { type: "button", class: "btn ghost sm", onclick: () => { Object.assign(sf, { q: "", cat: "all", tags: [], avail: "all", sort: "featured", wish: false }); search.value = ""; renderStore(); } }, icon("x"), t("store.clear")) : null);
     if (!active) { const f = pub.filter(p => p.featured).slice(0, 4); if (f.length) results.append(h("div", { class: "subhead" }, h("h2", null, t("store.featured"))), h("div", { class: "pgrid" }, f.map(productCard))); }
     results.append(head);
-    if (!l.length) results.append(empty(t("store.emptyT"), t("store.emptyP"), null, null, "search"));
+    if (!l.length) results.append(sf.wish && !sf.q && sf.cat === "all" && !sf.tags.length ? empty(t("wish.emptyT"), t("wish.emptyP"), null, null, "heart") : empty(t("store.emptyT"), t("store.emptyP"), null, null, "search"));
     else results.append(h("div", { class: "pgrid" }, l.map(productCard)));
   }
   if (storeFirst && motionOn()) {
@@ -579,9 +607,9 @@ function renderProduct(id) {
         canBuy ? h("div", { class: "buyrow" }, h("div", { class: "qty", role: "group", "aria-label": t("p.qty") },
           h("button", { type: "button", "aria-label": t("cart.dec"), onclick: () => { qty = clamp(qty - 1, 1, 99); qOut.textContent = qty; } }, "−"), qOut,
           h("button", { type: "button", "aria-label": t("cart.inc"), onclick: () => { qty = clamp(qty + 1, 1, 99); qOut.textContent = qty; } }, "+")),
-          h("button", { class: "btn", type: "button", onclick: () => cartAdd(p.id, qty) }, icon("cart"), t("add")), h("a", { class: "btn ghost", href: "#/cart" }, t("p.cart")))
+          h("button", { class: "btn", type: "button", onclick: () => cartAdd(p.id, qty) }, icon("cart"), t("add")), h("a", { class: "btn ghost", href: "#/cart" }, t("p.cart")), wishBtn(p, true))
           : h("div", { class: "buyrow" }, h("span", { class: "btn ghost", "aria-disabled": "true", style: { cursor: "default" } }, t("avail.soon"))),
-        h("div", { class: "demo-banner", style: { marginTop: "20px", marginBottom: 0 } }, icon("alert"), h("div", null, t("p.demo"))))));
+        h("div", { class: "demo-banner", style: { marginTop: "20px", marginBottom: 0 } }, icon("alert"), h("div", null, t(remote ? "p.demoLive" : "p.demo"))))));
   const rel = published().filter(x => x.cat === p.cat && x.id !== p.id).slice(0, 4);
   if (rel.length) root.append(h("div", { class: "sec" }, h("div", { class: "subhead" }, h("h2", null, t("p.related"))), h("div", { class: "pgrid" }, rel.map(productCard))));
   reveal(root);
@@ -599,7 +627,7 @@ function summaryEl(tt_, ctaEl) {
 }
 function renderCart() {
   pruneCart(); const root = clear($("#cartRoot")), tt_ = totals();
-  root.append(pagehead(t("nav.store"), t("cart.title")), banner(t("store.banner")));
+  root.append(pagehead(t("nav.store"), t("cart.title")), banner(t(remote ? "store.bannerLive" : "store.banner")));
   if (!tt_.lines.length) { root.append(empty(t("cart.emptyT"), t("cart.emptyP"), t("empty.go"), "store", "cart")); return; }
   root.append(h("div", { class: "cartwrap" }, h("div", null, tt_.lines.map(l => h("article", { class: "glass cline" },
     h("img", { src: productImg(l.p), alt: "", width: 84, height: 64 }),
@@ -730,6 +758,32 @@ function parseHash() {
   return { id, name, param: seg.slice(1).join("/") };
 }
 
+/* ---------------- Phase 7: optional Supabase products (read for everyone, write for admins only; RLS enforces it) ---------------- */
+const DBX = () => window.ALETHEA_DB && window.ALETHEA_DB.db ? window.ALETHEA_DB : null;
+const remoteCanWrite = () => { const D = DBX(); return !!(D && D.isAdmin()); };
+const okRemote = x => x && typeof x === "object" && typeof x.id === "string" && x.id.length <= 80 && x.name && typeof x.name === "object";
+async function loadRemote() {
+  const D = DBX(); if (!D) return;
+  try {
+    const res = await D.db.from("products").select("id,doc").limit(500);
+    if (res.error || !Array.isArray(res.data) || !res.data.length) return; // table missing or empty: keep local demo data
+    const cats = data.categories;
+    const list = res.data.map(r => r.doc).filter(okRemote).map(x => Object.assign({ status: "draft", cat: (cats[0] || {}).id || "", price: 0, oldPrice: 0, avail: "available", tags: [], badge: {}, desc: {}, art: { style: "mesh", hue: 220 }, image: "", gallery: [] }, x, { price: Number(x.price) || 0, oldPrice: Number(x.oldPrice) || 0 }));
+    if (!list.length) return;
+    data.products = list; remote = true; pruneCart(); rerender();
+  } catch (e) { /* offline or table missing: stay on local demo data */ }
+}
+async function remoteSave(p) {
+  const D = DBX(); if (!D || !D.isAdmin()) return { skipped: true };
+  const r = await D.db.from("products").upsert({ id: p.id, status: p.status, doc: p, updated_at: new Date().toISOString() });
+  return { error: r.error || null };
+}
+async function remoteDelete(id) {
+  const D = DBX(); if (!D || !D.isAdmin()) return { skipped: true };
+  const r = await D.db.from("products").delete().eq("id", id);
+  return { error: r.error || null };
+}
+
 window.ALETHEA = {
   h, icon, t, loc, clear, safeUrl, safeImg, art, STYLES, productImg, productImages, productCard, money, cents, toast, log, go, clamp,
   get lang() { return lang; }, get data() { return data; }, get logs() { return logs; }, get theme() { return theme; },
@@ -737,7 +791,8 @@ window.ALETHEA = {
   clearLogs() { logs = []; save(KEYS.log, logs); },
   setData(d) { data = migrate(d); saveData(); pruneCart(); },
   resetData() { data = clone(SEED); saveData(); cart = []; save(KEYS.cart, cart); updateBadges(); },
-  cartInfo: () => ({ count: totals().count })
+  cartInfo: () => ({ count: totals().count }),
+  wishCount, remoteCanWrite, remoteSave, remoteDelete, get remote() { return remote; }
 };
 
 function start() {
@@ -751,6 +806,7 @@ function start() {
   // close the mobile menu after choosing a link
   $("#nav").addEventListener("click", e => { if (e.target.closest("a")) { $("#nav").classList.remove("open"); $("#menu").setAttribute("aria-expanded", "false"); } });
   handle(parseHash());
+  addEventListener("alethea:auth", loadRemote); loadRemote();
 }
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
 })();

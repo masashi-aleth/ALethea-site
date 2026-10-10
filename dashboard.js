@@ -50,7 +50,15 @@ ar: {
   reset: "استعادة البيانات التجريبية الأصلية", resetSub: "يمسح تعديلاتك في هذا المتصفح ويعيد المحتوى الأصلي.", resetConfirm: "استعادة البيانات الأصلية؟ ستفقد كل تعديلاتك في هذا المتصفح.", resetDone: "تمت الاستعادة",
   actTitle: "سجل النشاط (محلي)", actSub: "آخر 100 إجراء في هذا المتصفح فقط. ليس سجلاً أمنياً.", actClear: "مسح السجل", actNone: "لا يوجد نشاط بعد.",
   l_add: "إضافة", l_edit: "تعديل", l_del: "حذف", l_pub: "نشر", l_hide: "إخفاء",
-  uploading: "جارٍ معالجة الصورة...", imgBad: "تعذّر قراءة الصورة", imgBig: "الصورة كبيرة جداً (الحد 8 م.ب)"
+  uploading: "جارٍ معالجة الصورة...", imgBad: "تعذّر قراءة الصورة", imgBig: "الصورة كبيرة جداً (الحد 8 م.ب)",
+  "tab.experience": "الكون والعروض", "sec.welcome": "شاشة الترحيب",
+  bannerLive: "وضع مباشر: أنت مسجّل كمدير. تغييرات المنتجات تُحفظ في قاعدة بيانات Supabase وتظهر لكل الزوار، والصلاحية يتحقق منها الخادم (RLS). بقية الأقسام ما زالت محلية في هذا المتصفح.",
+  remoteOk: "حُفظ في قاعدة البيانات", remoteFail: "تعذّر الحفظ في قاعدة البيانات (حُفظ محلياً فقط). تأكد من تشغيل schema_products.sql", remoteDel: "حُذف من قاعدة البيانات",
+  expTitle: "الكون والعروض", expSub: "تحكم بعوالم بوابة الصفحة الرئيسية وبشريط العرض. التغييرات محلية في هذا المتصفح.",
+  promoTitle: "شريط العرض", promoOn: "إظهار الشريط أعلى الموقع", promoAr: "النص بالعربية", promoEn: "النص بالإنجليزية", promoLink: "رابط (اختياري: https أو #/store مثلاً)", badLink: "الرابط غير صالح",
+  worldsTitle: "عوالم الكون المتعدد", worldsSub: "أظهر أو أخفِ كل عالم، وغيّر وسم حالته.",
+  "w.store": "المتجر", "w.projects": "الاستوديو", "w.tools": "المختبر", "w.services": "المصنع", "w.community": "الساحة", "w.about": "الأصل", "w.unk": "؟؟؟",
+  "ws.open": "مفتوح", "ws.demo": "عرض تجريبي", "ws.exp": "تجريبي", "ws.dev": "قيد التطوير", "ws.unk": "غير مكتشف"
 },
 en: {
   title: "Demo dashboard", sub: "Add and edit content from your phone without touching code.",
@@ -94,11 +102,19 @@ en: {
   reset: "Restore original demo data", resetSub: "Clears your edits in this browser and restores the original content.", resetConfirm: "Restore the original data? You will lose all your edits in this browser.", resetDone: "Restored",
   actTitle: "Activity log (local)", actSub: "Last 100 actions in this browser only. Not a security log.", actClear: "Clear log", actNone: "No activity yet.",
   l_add: "Added", l_edit: "Edited", l_del: "Deleted", l_pub: "Published", l_hide: "Hidden",
-  uploading: "Processing image...", imgBad: "Could not read the image", imgBig: "Image too large (8 MB max)"
+  uploading: "Processing image...", imgBad: "Could not read the image", imgBig: "Image too large (8 MB max)",
+  "tab.experience": "Universe & promo", "sec.welcome": "Welcome screen",
+  bannerLive: "Live mode: you are signed in as an admin. Product changes are saved to the Supabase database and show for every visitor; the server enforces permission (RLS). Other sections are still local to this browser.",
+  remoteOk: "Saved to the database", remoteFail: "Could not save to the database (saved locally only). Make sure schema_products.sql was run", remoteDel: "Deleted from the database",
+  expTitle: "Universe & promo", expSub: "Control the home-page portal worlds and the promo bar. Changes are local to this browser.",
+  promoTitle: "Promo bar", promoOn: "Show the bar at the top of the site", promoAr: "Text (Arabic)", promoEn: "Text (English)", promoLink: "Link (optional: https or e.g. #/store)", badLink: "Invalid link",
+  worldsTitle: "Multiverse worlds", worldsSub: "Show or hide each world and change its status label.",
+  "w.store": "The Store", "w.projects": "The Studio", "w.tools": "The Lab", "w.services": "The Forge", "w.community": "The Commons", "w.about": "The Origin", "w.unk": "???",
+  "ws.open": "Open", "ws.demo": "Demo", "ws.exp": "Experimental", "ws.dev": "In development", "ws.unk": "Undiscovered"
 }};
 const d = k => (DT[A.lang] && DT[A.lang][k]) ?? DT.ar[k] ?? k;
-const TABS = ["overview", "products", "categories", "projects", "news", "sections", "social", "theme", "setup", "activity"];
-const TAB_ICONS = { overview: "dash", products: "box", categories: "layers", projects: "folder", news: "news", sections: "grid", social: "link", theme: "palette", setup: "shield", activity: "log" };
+const TABS = ["overview", "products", "categories", "projects", "news", "sections", "experience", "social", "theme", "setup", "activity"];
+const TAB_ICONS = { overview: "dash", products: "box", categories: "layers", projects: "folder", news: "news", sections: "grid", experience: "globe", social: "link", theme: "palette", setup: "shield", activity: "log" };
 let tab = "overview", pFilter = "all", pQuery = "";
 const data = () => A.data;
 const nm = o => loc(o) || "—";
@@ -199,7 +215,7 @@ function productSheet(orig) {
     if (f.gallery.some(u => !safeImg(u))) return showErr(box, d("badUrl"));
     const c = cleanProduct(f, cats), list = data().products;
     if (isNew) { c.id = uid("p", c.name.en || c.name.ar); list.push(c); } else { const i = list.findIndex(x => x.id === orig.id); if (i >= 0) { c.id = orig.id; list[i] = c; } }
-    closeSheet(); persist(d(isNew ? "l_add" : "l_edit") + ": " + nm(c.name)); ok();
+    closeSheet(); persist(d(isNew ? "l_add" : "l_edit") + ": " + nm(c.name)); ok(); syncRemote(c);
   }));
 }
 function shrink(file) {
@@ -265,6 +281,14 @@ function remove(list, item, label) {
 }
 
 /* ---------- tabs ---------- */
+async function syncRemote(p) {
+  const r = await A.remoteSave(p); if (!r || r.skipped) return;
+  toast(r.error ? d("remoteFail") + " (" + str(r.error.message, 80) + ")" : d("remoteOk"));
+}
+async function syncRemoteDel(id) {
+  const r = await A.remoteDelete(id); if (!r || r.skipped) return;
+  toast(r.error ? d("remoteFail") + " (" + str(r.error.message, 80) + ")" : d("remoteDel"));
+}
 const pill = s => h("span", { class: "pill " + s }, d("st." + s));
 function row(img, title, meta, actions) {
   return h("div", { class: "drow" + (img ? "" : " noimg") }, img ? h("img", { src: img, alt: "", width: 64, height: 48 }) : null, h("div", { class: "meta" }, h("b", null, title), h("small", null, meta)), h("div", { class: "acts" }, actions));
@@ -296,9 +320,9 @@ function tabProducts(root) {
     if (!l.length) rows.append(h("div", { class: "empty" }, icon("box"), h("p", null, d("noItems"))));
     l.forEach(p => rows.append(row(A.productImg(p), nm(p.name), [h("span", null, pill(p.status)), p.featured ? "★ " : "", nm((D.categories.find(c => c.id === p.cat) || {}).name) + " · " + (A.cents(p.price) ? money(A.cents(p.price)) : A.t("free")) + " · " + d("av." + p.avail)],
       [btn("edit", d("edit"), () => productSheet(p)),
-       btn(p.status === "published" ? "eyeoff" : "eye", p.status === "published" ? d("hide") : d("publish"), () => { p.status = p.status === "published" ? "hidden" : "published"; persist(d(p.status === "published" ? "l_pub" : "l_hide") + ": " + nm(p.name)); ok(); }),
-       btn("spark", p.featured ? d("unfeature") : d("feature"), () => { p.featured = !p.featured; persist(d("l_edit") + ": " + nm(p.name)); ok(); }),
-       btn("trash", d("del"), () => remove(D.products, p, nm(p.name)), "danger")])));
+       btn(p.status === "published" ? "eyeoff" : "eye", p.status === "published" ? d("hide") : d("publish"), () => { p.status = p.status === "published" ? "hidden" : "published"; persist(d(p.status === "published" ? "l_pub" : "l_hide") + ": " + nm(p.name)); ok(); syncRemote(p); }),
+       btn("spark", p.featured ? d("unfeature") : d("feature"), () => { p.featured = !p.featured; persist(d("l_edit") + ": " + nm(p.name)); ok(); syncRemote(p); }),
+       btn("trash", d("del"), () => { if (remove(D.products, p, nm(p.name))) syncRemoteDel(p.id); }, "danger")])));
   };
   const search = h("input", { type: "search", placeholder: d("search"), value: pQuery, oninput: e => { pQuery = e.target.value; draw(); } });
   root.append(h("div", { class: "toprow" }, btn("plus", d("addProduct"), () => productSheet(null), ""),
@@ -320,6 +344,28 @@ function tabSimple(root, kind) {
     [pill(x.status), kind === "news" ? (x.pinned ? "★ " : "") + (x.date || "") : (x.tags || []).join(", ")],
     [btn("edit", d("edit"), () => ed(x)), btn(x.status === "published" ? "eyeoff" : "eye", x.status === "published" ? d("hide") : d("publish"), () => { x.status = x.status === "published" ? "hidden" : "published"; persist(d("l_edit") + ": " + nm(x.title)); ok(); }),
       btn("trash", d("del"), () => remove(list, x, nm(x.title)), "danger")])));
+}
+function tabExperience(root) {
+  const D = data(), W = D.worlds, P = D.promo, box = errBox();
+  const f = { on: !!P.on, ar: (P.text && P.text.ar) || "", en: (P.text && P.text.en) || "", link: P.link || "" };
+  const okLink = v => !v || /^#\/[a-z0-9\/_-]*$/i.test(v) || !!safeUrl(v);
+  const onChk = check(d("promoOn"), f.on, v => f.on = v);
+  const ar = h("input", { type: "text", maxlength: 120, value: f.ar, oninput: e => f.ar = e.target.value });
+  const en = h("input", { type: "text", maxlength: 120, dir: "ltr", value: f.en, oninput: e => f.en = e.target.value });
+  const lk = h("input", { type: "text", dir: "ltr", maxlength: 200, placeholder: "https://... / #/store", value: f.link, oninput: e => f.link = e.target.value.trim() });
+  root.append(
+    h("div", { class: "glass dpanel" }, h("h2", null, d("promoTitle")), box, onChk, field(d("promoAr"), ar), field(d("promoEn"), en), field(d("promoLink"), lk),
+      btn("check", d("save"), () => {
+        if (!okLink(f.link)) return showErr(box, d("badLink"));
+        P.on = f.on; P.text = { ar: str(f.ar, 120), en: str(f.en, 120) }; P.link = f.link;
+        A.saveData(); A.log(d("l_edit") + ": " + d("promoTitle")); box.style.display = "none"; ok();
+      }, "")),
+    h("div", { class: "glass dpanel" }, h("h2", null, d("worldsTitle")), h("p", { class: "sub" }, d("worldsSub")),
+      Object.keys(W).map(id => h("div", { class: "switch-row" }, h("div", null, d("w." + id)),
+        h("div", { class: "toprow", style: { margin: 0 } },
+          sel(["open", "demo", "exp", "dev", "unk"].map(s => [s, d("ws." + s)]), W[id].status, v => { W[id].status = v; A.saveData(); A.log(d("l_edit") + ": " + d("w." + id)); }),
+          h("button", { class: "tgl", type: "button", role: "switch", "aria-checked": String(W[id].show !== false), "aria-label": d("w." + id), onclick: e => { W[id].show = W[id].show === false; e.currentTarget.setAttribute("aria-checked", String(W[id].show)); A.saveData(); A.log(d("l_edit") + ": " + d("w." + id)); } })))),
+      h("a", { class: "btn ghost sm", href: "#/", style: { marginTop: "14px" } }, icon("eye"), d("viewSite"))));
 }
 function tabSections(root) {
   const s = data().sections;
@@ -353,7 +399,7 @@ function tabSetup(root) {
     try { const j = JSON.parse(await f.text()); if (!j || !Array.isArray(j.products)) throw 0;
       const cats = (Array.isArray(j.categories) && j.categories.length ? j.categories : D.categories).map(c => ({ id: str(c.id, 40), icon: ICONS.includes(c.icon) ? c.icon : "box", name: bi(c.name, 40) })).filter(c => c.id);
       A.setData({ categories: cats, products: j.products.slice(0, 300).map(p => cleanProduct(p, cats)), projects: (j.projects || []).slice(0, 100).map(x => cleanSimple(x, "project")), announcements: (j.announcements || []).slice(0, 100).map(x => cleanSimple(x, "news")),
-        tools: D.tools, services: D.services, sections: j.sections, socials: Object.fromEntries(Object.entries(j.socials || {}).map(([k, v]) => [k, k === "email" ? str(v, 80) : safeUrl(v)])) });
+        tools: D.tools, services: D.services, sections: j.sections, worlds: j.worlds, promo: j.promo, socials: Object.fromEntries(Object.entries(j.socials || {}).map(([k, v]) => [k, k === "email" ? str(v, 80) : safeUrl(v)])) });
       A.log(d("importOk")); toast(d("importOk")); A.rerender();
     } catch (x) { toast(d("importBad")); }
     fileIn.value = "";
@@ -386,10 +432,10 @@ function tabActivity(root) {
 /* ---------- shell ---------- */
 function render() {
   const root = clear($("#dashRoot")), body = h("div");
-  root.append(h("div", { class: "pagehead" }, h("span", { class: "eyebrow" }, A.t("nav.dashboard") + " · DEMO"), h("h1", null, d("title")), h("p", null, d("sub"))),
-    h("div", { class: "demo-banner big", role: "note" }, icon("alert"), h("div", null, d("banner"))),
+  root.append(h("div", { class: "pagehead" }, h("span", { class: "eyebrow" }, A.t("nav.dashboard") + (A.remoteCanWrite() ? " · LIVE" : " · DEMO")), h("h1", null, d("title")), h("p", null, d("sub"))),
+    A.remoteCanWrite() ? h("div", { class: "demo-banner big live", role: "note" }, icon("shield"), h("div", null, d("bannerLive"))) : h("div", { class: "demo-banner big", role: "note" }, icon("alert"), h("div", null, d("banner"))),
     h("div", { class: "dtabs", role: "tablist" }, TABS.map(k => h("button", { class: "chip dtab" + (tab === k ? " on" : ""), type: "button", role: "tab", "aria-selected": String(tab === k), onclick: () => { tab = k; render(); } }, icon(TAB_ICONS[k]), d("tab." + k)))), body);
-  ({ overview: tabOverview, products: tabProducts, categories: tabCats, projects: r => tabSimple(r, "project"), news: r => tabSimple(r, "news"), sections: tabSections, social: tabSocial, theme: tabTheme, setup: tabSetup, activity: tabActivity })[tab](body);
+  ({ overview: tabOverview, products: tabProducts, categories: tabCats, projects: r => tabSimple(r, "project"), news: r => tabSimple(r, "news"), sections: tabSections, experience: tabExperience, social: tabSocial, theme: tabTheme, setup: tabSetup, activity: tabActivity })[tab](body);
 }
 window.ALETHEA_DASH = { render };
 })();

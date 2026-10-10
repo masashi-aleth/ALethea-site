@@ -17,7 +17,7 @@ Static site hosted on GitHub Pages. **No build step, no framework, no npm.** Fil
 
 ## Two separate admin concepts (do not mix up)
 1. `#/admin` — REAL, Supabase-backed, protected by RLS (`profiles.role = 'admin'`). Existing; keep working.
-2. `#/dashboard` — DEMO dashboard. No login. Data lives in the visitor's own `localStorage`; nothing is shared across visitors/devices. Always show the demo banner. It must never claim to be secure or persistent across devices.
+2. `#/dashboard` — dashboard UI. For visitors it is a DEMO (no login, data in the visitor's own `localStorage`, demo banner). When the signed-in user is a real Supabase admin (`ALETHEA_DB.isAdmin()`), product create/edit/publish/feature/delete are ALSO written to the `products` table (`schema_products.sql`); the server (RLS) decides, never the client. Other tabs stay local. Never claim the demo mode is secure or shared.
 
 ## Demo-mode rules
 - No real payments, ever, in this version. Checkout is a labelled simulation; collect no payment details.
@@ -37,3 +37,18 @@ Static site hosted on GitHub Pages. **No build step, no framework, no npm.** Fil
 
 ## Testing
 Serve with `python3 -m http.server` and drive with Playwright (Chromium is available). Check: navigation, cart totals (integer cents), theme persistence, dashboard CRUD, mobile viewport (390px), no console errors.
+
+## Added layers (Phases 1-4, additive; do not merge into the originals)
+| File | Role |
+|---|---|
+| `aurora-foundation.css` | Tokens (spacing/radius/z-index), tap targets, mobile perf, toast above dock, hero halo fix, nav breakpoint (menu button up to 1600px). |
+| `welcome.css` / `welcome.js` | Full-screen "WELCOME TO ALETHEA" intro. Builds its own DOM, once per session (`sessionStorage alethea.entered`), skipped for admin/login/OAuth return. CSS 3D core only here. |
+| `multiverse.css` / `multiverse.js` | Portal hub injected into `#homeSections` (replaces Explore tiles, re-injected after re-render) + scroll progress, back-to-top, cart badge bump. |
+| `ALETHEA_PROGRESS.md` | Phase log. Read it first. |
+
+## Phases 5-8 additions
+- Wishlist (`alethea.wish.v1`, this browser), discount %, saved filter chip in the store (`alethea.js`).
+- Dashboard tab "Universe & promo" (`worlds` + `promo` in demo data; `sections.welcome` toggles the welcome screen).
+- Optional Supabase products: `loadRemote()` in `alethea.js` reads `products` (public sees published only); `remoteSave/remoteDelete` write only for admins. If the table is missing the site silently keeps local demo data.
+- `polish.css` loads last (wishlist, promo bar, small-phone header fixes).
+- `schema_products.sql` is run manually in Supabase after `schema.sql`.

@@ -1,0 +1,75 @@
+/* ALethea — Phase 3: Multiverse hub (2D only). Scoped with mv-. Uses theme vars --c1/--c2/--c3. */
+.view.on{animation:mvView .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes mvView{from{opacity:0;transform:translateY(10px) scale(.992)}to{opacity:1;transform:none}}
+.mv-replaced{display:none!important}
+
+.mv-hub{position:relative;padding:54px 0 6px;isolation:isolate;overflow-x:clip}
+.mv-head{max-width:640px;margin:0 0 26px}
+.mv-head h2{margin:0 0 8px;font-size:clamp(1.7rem,5.6vw,2.8rem);line-height:1.2;font-weight:700;letter-spacing:.01em;unicode-bidi:isolate;text-align:start;
+  background:var(--grad,linear-gradient(110deg,#3b82f6,#10d9a0,#8b5cf6));-webkit-background-clip:text;background-clip:text;color:transparent}
+.mv-head p{margin:0;color:var(--muted,#9aa6d1);line-height:1.8}
+
+/* orbit backdrop: static lines, very slow turn */
+.mv-orbits{position:absolute;inset:-40px -10px -20px;width:calc(100% + 20px);height:calc(100% + 60px);z-index:-1;opacity:.55;pointer-events:none;overflow:visible}
+.mv-orbits g{transform-origin:500px 260px;animation:mvTurn 120s linear infinite}
+.mv-orbits ellipse{fill:none;stroke:url(#mvLine);stroke-width:1.2}
+@keyframes mvTurn{to{transform:rotate(360deg)}}
+
+.mv-worlds{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.mv-worlds li{display:flex;animation:mvRise .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0) * 70ms)}
+@keyframes mvRise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+.mv-world{position:relative;flex:1;display:flex;flex-direction:column;gap:8px;min-height:176px;padding:18px;border-radius:var(--r-lg,20px);overflow:hidden;
+  text-align:start;font:inherit;color:inherit;text-decoration:none;cursor:pointer;
+  border:1px solid rgba(255,255,255,.14);
+  background:linear-gradient(150deg,color-mix(in srgb,var(--a) 24%,transparent),color-mix(in srgb,var(--b) 8%,transparent) 62%),rgba(9,14,42,.62);
+  box-shadow:0 12px 36px rgba(2,6,24,.45),inset 0 1px 0 rgba(255,255,255,.12);
+  transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .25s,box-shadow .3s}
+.mv-world::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;
+  background:radial-gradient(220px circle at var(--mx,80%) var(--my,0%),rgba(255,255,255,.16),transparent 62%)}
+.mv-world:hover,.mv-world:focus-visible{transform:translateY(-4px);border-color:color-mix(in srgb,var(--a) 70%,#fff 10%);box-shadow:0 20px 50px rgba(2,6,24,.55),0 0 30px color-mix(in srgb,var(--a) 35%,transparent)}
+.mv-world:hover::after{opacity:1}
+.mv-world:active{transform:scale(.985)}
+.mv-world:focus-visible{outline:2px solid var(--c2,#10d9a0);outline-offset:3px}
+
+.mv-glyph{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;color:#04101f;flex:none;
+  background:linear-gradient(135deg,var(--a),var(--b));box-shadow:0 0 22px color-mix(in srgb,var(--a) 45%,transparent)}
+.mv-glyph svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.mv-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.mv-status{font-size:.72rem;padding:3px 11px;border-radius:999px;border:1px solid currentColor;background:rgba(3,6,20,.55);white-space:nowrap}
+.mv-status.open{color:var(--c2,#10d9a0)}
+.mv-status.demo{color:#fbbf24}
+.mv-status.exp{color:#c4b5fd}
+.mv-status.dev{color:#93a3d8}
+.mv-status.unk{color:#93a3d8;border-style:dashed}
+.mv-name{font-size:1.2rem;font-weight:700;margin-top:4px}
+.mv-desc{color:#b4bfe6;font-size:.93rem;line-height:1.7;flex:1}
+.mv-go{display:inline-flex;align-items:center;gap:6px;color:var(--c2,#10d9a0);font-weight:600;font-size:.9rem}
+.mv-go svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+[dir=rtl] .mv-go svg{transform:scaleX(-1)}
+.mv-world.is-unk{border-style:dashed;background:rgba(9,14,42,.45)}
+.mv-world.is-unk .mv-glyph{filter:saturate(.5);opacity:.8}
+.mv-world.is-unk .mv-go{color:#93a3d8}
+
+@media(hover:none){.mv-world:hover{transform:none}}
+@media(max-width:560px){.mv-hub{padding-top:40px}.mv-world{min-height:150px}}
+html[data-motion=off] .mv-worlds li,html[data-motion=off] .mv-orbits g,html[data-motion=off] .view.on{animation:none!important}
+@media(prefers-reduced-motion:reduce){.mv-worlds li,.mv-orbits g,.view.on{animation:none!important}}
+
+/* ---- Phase 4: light 2D interactions (no 3D here) ---- */
+.btn:not(:disabled):active,.chip:active,.addbtn:not(:disabled):active,.ibtn:active,.preset:active,.qty button:active{transform:scale(.96)}
+a:focus-visible,button:focus-visible,[role=switch]:focus-visible,select:focus-visible{outline:2px solid var(--c2,#10d9a0);outline-offset:3px}
+.mv-progress{position:fixed;top:0;inset-inline:0;height:3px;z-index:30;pointer-events:none;transform-origin:left center;transform:scaleX(0);
+  background:var(--grad,linear-gradient(90deg,#3b82f6,#10d9a0,#8b5cf6))}
+[dir=rtl] .mv-progress{transform-origin:right center}
+.mv-top-btn{position:fixed;inset-inline-start:14px;bottom:24px;z-index:35;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;cursor:pointer;
+  color:var(--text,#eaf0ff);border:1px solid rgba(255,255,255,.18);background:rgba(7,11,34,.82);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  opacity:0;visibility:hidden;transform:translateY(10px);transition:opacity .25s,transform .25s,visibility 0s .25s,border-color .2s}
+.mv-top-btn.show{opacity:1;visibility:visible;transform:none;transition:opacity .25s,transform .25s,visibility 0s,border-color .2s}
+.mv-top-btn:hover{border-color:var(--c2,#10d9a0)}
+.mv-top-btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:760px){.mv-top-btn{bottom:calc(86px + env(safe-area-inset-bottom,0px))}}
+.mv-bump{animation:mvBump .4s cubic-bezier(.2,.8,.2,1)}
+@keyframes mvBump{40%{transform:scale(1.55)}}
+html[data-motion=off] .mv-bump{animation:none!important}
+@media(prefers-reduced-motion:reduce){.mv-bump{animation:none!important}.mv-top-btn{transition:none}}

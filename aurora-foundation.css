@@ -1,0 +1,53 @@
+/* ALethea — Phase 1 foundation. Load AFTER aurora.css. Additive only: tokens, mobile perf, tap targets, layering fixes. */
+:root{
+  --sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:24px;--sp-6:40px;
+  --r-sm:10px;--r-md:14px;--r-lg:20px;
+  --tap:44px;
+  --z-header:20;--z-dock:40;--z-panel:60;--z-sheet:80;--z-toast:90;--z-welcome:200;
+}
+.vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+body.is-welcome{overflow:hidden}
+
+/* toast must sit above sheets, and above the mobile dock */
+#toast{z-index:var(--z-toast)}
+@media(max-width:760px){#toast{bottom:calc(88px + env(safe-area-inset-bottom,0px))}}
+
+/* tap targets on touch devices */
+@media(pointer:coarse){
+  .chip,.btn.sm,.mini,.tabs button,.rm{min-height:var(--tap)}
+  nav a{min-height:var(--tap);display:flex;align-items:center}
+}
+
+/* GPU / battery: lighter background and fewer composited layers on phones */
+.tilt{will-change:auto}
+.tilt.hot{will-change:transform}
+@media(max-width:760px){
+  .bg .aur{filter:blur(48px)}
+  .bg .a3{display:none}
+  .pcard{backdrop-filter:none;-webkit-backdrop-filter:none} /* aurora.css added blur to every card on mobile */
+}
+/* no hover-tilt on touch screens (it never fires reliably and costs layers) */
+@media(hover:none){.tilt{transform:none!important}}
+
+/* guard against horizontal overflow from floating hero chips */
+.hero3d,.scene{max-width:100%}
+@media(max-width:900px){.fchip.c1{inset-inline-start:0}.fchip.c2{inset-inline-end:0}}
+
+/* Hero core: big box-shadow inside a 3D context can render as a clipped rectangle on some GPUs.
+   Replace it with a flat radial halo behind the stage. */
+.stage .core{box-shadow:inset -10px -14px 30px rgba(0,0,20,.5)}
+.scene::before{content:"";position:absolute;inset:6%;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,color-mix(in srgb,var(--c3) calc(55%*var(--glow,.6)),transparent) 0%,color-mix(in srgb,var(--c1) calc(32%*var(--glow,.6)),transparent) 38%,transparent 66%)}
+
+/* main gets programmatic focus after the welcome screen: never draw a ring around the whole page */
+main:focus,main:focus-visible{outline:none}
+/* nav has 11 links: keep each on one line; use the menu button up to 1600px, widen the bar above that */
+nav a{white-space:nowrap}
+@media(max-width:1600px){
+  .menu{display:block}
+  nav{display:none;position:absolute;top:100%;inset-inline:0;flex-direction:column;align-items:stretch;background:rgba(5,8,24,.97);border-bottom:1px solid var(--line);padding:10px 18px 16px;max-height:calc(100vh - 70px);overflow:auto}
+  nav.open{display:flex}
+  nav a{padding:13px 12px;font-size:1.02rem}
+  .tools{margin-inline-start:auto}
+}
+@media(min-width:1601px){.bar{max-width:1560px}}

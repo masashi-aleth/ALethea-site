@@ -1,0 +1,76 @@
+/* ALethea — Phase 2: cinematic welcome. Scoped with wl- / #welcome. Uses theme vars --c1/--c2/--c3 when present. */
+html.wl-pending body{overflow:hidden}
+html.wl-pending body>*:not(#welcome){visibility:hidden}
+
+#welcome{position:fixed;inset:0;z-index:var(--z-welcome,200);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;
+  padding:max(20px,env(safe-area-inset-top,0px)) 20px max(20px,env(safe-area-inset-bottom,0px));text-align:center;overflow:hidden;
+  direction:ltr;font-family:var(--font,"Readex Pro","Segoe UI",system-ui,sans-serif);color:#eaf0ff;
+  background:radial-gradient(ellipse at 50% 40%,#0d1340 0%,#070a24 48%,#03040f 100%);
+  transition:opacity .7s ease .25s}
+#welcome *{box-sizing:border-box}
+#welcome.wl-go{opacity:0;pointer-events:none}
+#welcome .wl-fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#welcome .wl-haze{position:absolute;inset:0;pointer-events:none;background:
+  radial-gradient(40vmax 40vmax at 20% 15%,color-mix(in srgb,var(--c3,#8b5cf6) 28%,transparent),transparent 70%),
+  radial-gradient(44vmax 44vmax at 85% 85%,color-mix(in srgb,var(--c1,#3b82f6) 26%,transparent),transparent 70%),
+  radial-gradient(30vmax 30vmax at 80% 12%,color-mix(in srgb,var(--c2,#10d9a0) 16%,transparent),transparent 70%)}
+
+/* scene: perspective parent + tilting stage */
+.wl-scene{position:relative;z-index:1;perspective:900px;touch-action:none;
+  width:min(64vw,36vh,320px);aspect-ratio:1;margin-bottom:clamp(18px,4vh,36px);
+  transition:transform .95s cubic-bezier(.6,0,.2,1),opacity .8s ease}
+.wl-scene::before{content:"";position:absolute;inset:-35%;border-radius:50%;pointer-events:none;background:radial-gradient(circle,color-mix(in srgb,var(--c1,#3b82f6) 38%,transparent) 0%,color-mix(in srgb,var(--c3,#8b5cf6) 22%,transparent) 32%,transparent 62%)}
+.wl-stage{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(var(--wx,-10deg)) rotateY(var(--wy,18deg));transition:transform .2s ease-out}
+.wl-ring{position:absolute;border-radius:50%;border:2px solid;transform-style:preserve-3d}
+.wl-r1{inset:0;border-color:var(--c1,#3b82f6);box-shadow:0 0 26px color-mix(in srgb,var(--c1,#3b82f6) 55%,transparent),inset 0 0 26px color-mix(in srgb,var(--c1,#3b82f6) 30%,transparent);animation:wlA 15s linear infinite}
+.wl-r2{inset:10%;border-color:var(--c2,#10d9a0);box-shadow:0 0 26px color-mix(in srgb,var(--c2,#10d9a0) 50%,transparent),inset 0 0 22px color-mix(in srgb,var(--c2,#10d9a0) 28%,transparent);animation:wlB 11s linear infinite}
+.wl-r3{inset:22%;border-color:var(--c3,#8b5cf6);box-shadow:0 0 26px color-mix(in srgb,var(--c3,#8b5cf6) 55%,transparent),inset 0 0 22px color-mix(in srgb,var(--c3,#8b5cf6) 30%,transparent);animation:wlC 8s linear infinite}
+@keyframes wlA{from{transform:rotateX(72deg) rotateZ(0)}to{transform:rotateX(72deg) rotateZ(360deg)}}
+@keyframes wlB{from{transform:rotateY(70deg) rotateZ(0)}to{transform:rotateY(70deg) rotateZ(-360deg)}}
+@keyframes wlC{from{transform:rotateX(36deg) rotateY(36deg) rotateZ(0)}to{transform:rotateX(36deg) rotateY(36deg) rotateZ(360deg)}}
+.wl-disc{position:absolute;inset:30%;border-radius:50%;background:conic-gradient(from 0deg,var(--c1,#3b82f6),var(--c2,#10d9a0),var(--c3,#8b5cf6),var(--c1,#3b82f6));-webkit-mask:radial-gradient(circle,#000 35%,transparent 71%);mask:radial-gradient(circle,#000 35%,transparent 71%);opacity:.8;animation:wlSpin 6s linear infinite}
+@keyframes wlSpin{to{transform:rotate(360deg)}}
+.wl-core{position:absolute;inset:38%;border-radius:50%;transform:translateZ(24px);
+  background:radial-gradient(circle at 32% 30%,#fff,var(--c2,#10d9a0) 24%,var(--c1,#3b82f6) 58%,var(--c3,#8b5cf6));
+  animation:wlPulse 4s ease-in-out infinite}
+@keyframes wlPulse{50%{transform:translateZ(24px) scale(1.1)}}
+
+/* text */
+.wl-title{position:relative;z-index:1;margin:0;max-width:92vw;text-wrap:balance;font-weight:300;line-height:1.2;
+  font-size:clamp(1.3rem,5.4vw,3.1rem);letter-spacing:.2em;padding-inline-start:.2em;
+  background:linear-gradient(90deg,var(--c1,#3b82f6),var(--c2,#10d9a0),var(--c3,#8b5cf6));-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:wlIn 1.2s cubic-bezier(.2,.8,.2,1) .15s both}
+.wl-credit{position:relative;z-index:1;margin:14px 0 clamp(22px,4.5vh,36px);color:#9aa6d1;font-size:clamp(.78rem,2.6vw,.95rem);letter-spacing:.06em;animation:wlIn 1s ease .55s both}
+.wl-enter{position:relative;z-index:1;min-height:52px;min-width:180px;padding:0 44px 0 52px;border-radius:999px;cursor:pointer;
+  font:600 1rem var(--font,system-ui,sans-serif);letter-spacing:.3em;color:#fff;
+  border:1px solid rgba(255,255,255,.38);background:linear-gradient(135deg,color-mix(in srgb,var(--c1,#3b82f6) 45%,transparent),color-mix(in srgb,var(--c3,#8b5cf6) 45%,transparent));
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  box-shadow:0 0 0 0 color-mix(in srgb,var(--c2,#10d9a0) 50%,transparent);
+  transition:transform .2s,box-shadow .3s,border-color .3s;animation:wlIn 1s ease .8s both,wlGlow 3.2s ease-in-out 2s infinite}
+.wl-enter:hover{transform:translateY(-2px);border-color:var(--c2,#10d9a0);box-shadow:0 0 34px color-mix(in srgb,var(--c2,#10d9a0) 55%,transparent)}
+.wl-enter:active{transform:scale(.97)}
+.wl-enter:focus-visible{outline:2px solid var(--c2,#10d9a0);outline-offset:4px}
+@keyframes wlIn{from{opacity:0;transform:translateY(14px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+@keyframes wlGlow{50%{box-shadow:0 0 28px 2px color-mix(in srgb,var(--c2,#10d9a0) 40%,transparent)}}
+
+/* transition into the site: fly through the portal */
+#welcome.wl-go .wl-scene{transform:scale(4.5);opacity:0}
+#welcome.wl-go .wl-title,#welcome.wl-go .wl-credit,#welcome.wl-go .wl-enter{opacity:0;transform:translateY(-10px);transition:opacity .35s,transform .35s;animation:none}
+
+/* fallback: no 3D support -> flat rings */
+#welcome.wl-flat .wl-scene{perspective:none}
+#welcome.wl-flat .wl-stage{transform:none}
+#welcome.wl-flat .wl-ring{animation:wlSpin 14s linear infinite}
+#welcome.wl-flat .wl-r2{animation-direction:reverse}
+#welcome.wl-flat .wl-core{transform:none;animation:none}
+
+/* reduced motion / animation intensity 0: still image, instant fade */
+#welcome.wl-still *{animation:none!important}
+#welcome.wl-still .wl-stage{transform:rotateX(-10deg) rotateY(18deg)!important;transition:none}
+#welcome.wl-still .wl-ring{transform:rotateX(70deg)}
+#welcome.wl-still .wl-r2{transform:rotateY(70deg)}
+#welcome.wl-still .wl-r3{transform:rotateX(36deg) rotateY(36deg)}
+#welcome.wl-still,#welcome.wl-still .wl-scene{transition-duration:.18s!important;transition-delay:0s!important}
+#welcome.wl-still.wl-go .wl-scene{transform:none}
+@media(prefers-reduced-motion:reduce){#welcome *{animation:none!important}}
+@media(max-height:480px){.wl-scene{width:min(34vw,44vh,200px);margin-bottom:10px}.wl-credit{margin:8px 0 14px}}

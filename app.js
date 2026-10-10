@@ -13,6 +13,7 @@ const db = ready(C.SUPABASE_URL) && ready(C.SUPABASE_ANON_KEY) && window.supabas
 
 let session = null, profile = null;
 const isAdmin = () => !!profile && profile.role === "admin";
+window.ALETHEA_DB = { db, isAdmin }; // used by alethea.js / dashboard.js (writes are still enforced by RLS on the server)
 
 const toast = $("#toast"); let tt;
 function say(m) { toast.textContent = m; toast.classList.add("show"); clearTimeout(tt); tt = setTimeout(() => toast.classList.remove("show"), 3200); }
@@ -65,6 +66,7 @@ function paint() {
   $$("[data-user]").forEach(e => e.hidden = !session);
   $$("[data-admin]").forEach(e => e.hidden = !isAdmin());
   $("#who").textContent = (profile && profile.username) || (session && session.user.email) || "";
+  window.dispatchEvent(new Event("alethea:auth"));
 }
 
 // الأخطاء بالعربي

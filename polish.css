@@ -1,0 +1,44 @@
+/* ALethea — Phases 5-8: storefront + dashboard polish. Loaded last. */
+/* wishlist heart */
+.wishbtn{position:absolute;top:10px;inset-inline-end:10px;z-index:2;width:42px;height:42px;border-radius:13px;display:grid;place-items:center;cursor:pointer;
+  color:var(--text,#eaf0ff);border:1px solid rgba(255,255,255,.2);background:rgba(3,6,20,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  transition:transform .15s,color .2s,border-color .2s,background .2s}
+.wishbtn:hover{border-color:#ff6b95}
+.wishbtn:active{transform:scale(.9)}
+.wishbtn svg{width:20px;height:20px;fill:none}
+.wishbtn.on{color:#ff6b95;border-color:#ff6b95;background:rgba(255,107,149,.14)}
+.wishbtn.on svg{fill:currentColor}
+.wishbtn.lg{position:static;width:46px;height:46px;border-radius:12px}
+.chip b{margin-inline-start:4px;font-weight:700}
+.chip[aria-pressed=true] svg{fill:currentColor}
+.price .off{margin-inline-start:6px;font-size:.74rem;padding:1px 9px;border-radius:99px;background:var(--grad);color:#04101f;font-weight:700;vertical-align:middle}
+/* live dashboard banner */
+.demo-banner.live{border:1px solid var(--c2,#10d9a0);color:#c4f7e6;background:rgba(16,217,160,.08)}
+/* promo bar */
+.mv-promo{position:relative;display:flex;align-items:center;justify-content:center;gap:10px;padding:8px 44px;font-size:.9rem;text-align:center;color:#04101f;
+  background:var(--grad,linear-gradient(110deg,#3b82f6,#10d9a0,#8b5cf6))}
+.mv-promo-text{color:inherit;font-weight:600;text-decoration:none}
+a.mv-promo-text:hover{text-decoration:underline}
+.mv-promo-x{position:absolute;inset-inline-end:6px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;border-radius:10px;background:rgba(0,0,0,.12);color:#04101f;font-size:1.3rem;line-height:1;cursor:pointer}
+.mv-promo-x:hover{background:rgba(0,0,0,.25)}
+/* product cards: keep names tidy, equal heights */
+.pname{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+/* dashboard: sheet fields never overflow, tables scroll */
+.sheet input,.sheet textarea,.sheet select{max-width:100%}
+.dpanel{overflow-wrap:anywhere}
+
+/* small phones (<=400px): header must fit in LTR too; floating hero chips must not widen the page */
+.hero3d{overflow-x:clip}
+@media(max-width:400px){
+  .bar{padding-inline:12px;gap:6px}
+  .brand{font-size:1.08rem;gap:6px}
+  .brand svg{width:28px;height:28px}
+  .tools{gap:4px;margin-inline-start:auto}
+  .ibtn,.menu{width:40px;height:40px}
+  .ibtn.langb{min-width:40px;padding:0 8px}
+}
+
+/* product card price row: old price and % pill wrap under the price instead of being clipped on narrow cards */
+.pcard .pbottom{align-items:flex-end}
+.pcard .pbottom .price{flex:1;min-width:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:0 6px}
+.pcard .price .old,.pcard .price .off{margin:0}
