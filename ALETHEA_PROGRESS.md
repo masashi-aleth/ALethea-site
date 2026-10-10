@@ -65,3 +65,9 @@ Checked: remote theme applied, hostile values ignored/clamped, own-id upsert aft
 
 ## Stage 12 (audit log + operations page + hero search hint): DONE, UI tested with a MOCK client only
 10 UI checks passed (hint, non-admin denied, overview numbers, health, pagination, filter, CSV, English, no overflow, no JS errors). `schema_audit.sql` NOT run on a real database. Still open: agent assignment, attachments, email, AI assistant, maintenance mode, user suspension, auth-event logging (use Supabase Auth logs).
+
+## Stage 12b (visual cleanup): DONE, checked with screenshots (390px and 1280px) + all earlier UI tests re-run
+Support, Operations and the home FAQ now use the site's own system (`pagehead`, `eyebrow`, `sec-head`, `glass`, `field`, typed inputs). Removed the duplicate store info bar (the store already has a demo banner); "recently viewed" now sits under that banner and only appears when there is history. Header fits on 390px (icon-only brand below 430px). Fixed "ms" direction in Arabic. AI assistant: backend draft (Edge Function + schema_ai.sql) exists in a separate folder and is NOT connected or deployed yet.
+
+## Stage 13 (galaxy hero + guide + settings): DONE, 15 UI checks passed, screenshots reviewed (390px, 1280px)
+NOT done yet (requested): redesigned admin dashboard (`#/dashboard`, dashboard.js 51 KB, not reviewed yet), nicer login page, AI assistant UI. The AI backend draft is in a separate folder and not connected.

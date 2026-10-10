@@ -66,3 +66,6 @@ Serve with `python3 -m http.server` and drive with Playwright (Chromium is avail
 
 ## Stage 12 addition (audit log + operations)
 `schema_audit.sql`: `audit_log` (admin-read RLS, append-only trigger, written only by definer triggers on tickets/messages/profiles.role). `ops.js`: view `#ops` (admin only in UI, RLS on the server), overview counts, status bars, DB latency check, filterable/paginated log, spreadsheet-safe CSV export. `extras.js` also adds a hero search hint button. Welcome screen and hero were left as they were (they already match the spec).
+
+## Stage 13 addition (galaxy, guide, settings)
+`galaxy.js`: replaces the stage contents with an SVG spiral galaxy (`.gx`) and puts 6 real links (`.gx-node`) in `#scene`; node `pointerdown` stops propagation so clicks work while `initHero` drag still works on empty space; guide dialog shown once (`alethea.guide.v1`) after `#welcome` is gone. `settings.js`: view `#settings`, prefs in `alethea.prefs.v1` (font-size %, `--r`, `pro-nofx`, `pro-contrast`); motion goes through `ALETHEA.theme.motion` + `applyTheme()` so it syncs with the account. Lite devices get fewer stars.

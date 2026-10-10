@@ -1,7 +1,7 @@
 # موقع ALethea: دليل الإعداد
 
 الملفات التي ترفعها إلى GitHub (كلها في نفس المجلد الرئيسي):
-`index.html` `style.css` `aurora.css` `aurora-foundation.css` `welcome.css` `welcome.js` `multiverse.css` `multiverse.js` `polish.css` `extras.css` `extras.js` `account-sync.js` `support.js` `ops.js` `config.js` `app.js` `data.js` `alethea.js` `dashboard.js` `README.md` `CLAUDE.md` `ALETHEA_PROGRESS.md`.
+`index.html` `style.css` `aurora.css` `aurora-foundation.css` `welcome.css` `welcome.js` `multiverse.css` `multiverse.js` `polish.css` `extras.css` `extras.js` `account-sync.js` `support.js` `ops.js` `galaxy.js` `settings.js` `config.js` `app.js` `data.js` `alethea.js` `dashboard.js` `README.md` `CLAUDE.md` `ALETHEA_PROGRESS.md`.
 أما `schema.sql` و`schema_products.sql` فيُشغَّلان في Supabase ولا يلزم رفعهما (ارفعهما إن أردت حفظهما بالريبو).
 
 ما يفعله كل جزء: شاشة الترحيب (`welcome.*`)، بوابات العوالم في الرئيسية (`multiverse.*`)، المتجر التجريبي (`alethea.js` و`data.js`)، لوحة تجريبية `#/dashboard` (`dashboard.js`)، لوحة أعضاء حقيقية `#/admin` (`app.js` مع Supabase).
@@ -46,3 +46,6 @@
 
 ## 10) سجل الأحداث ولوحة العمليات (المرحلة 12)
 بعد `schema_support.sql` شغّل `schema_audit.sql`. بعدها يظهر للمدير رابط «العمليات» (`#/ops`): أرقام الأعضاء والتذاكر، رسم للتذاكر حسب الحالة، فحص اتصال قاعدة البيانات، وسجل أحداث قابل للبحث والتصفية مع تصدير CSV. السجل يقرؤه المدراء فقط ولا أحد يعدّله أو يحذفه. يُسجَّل: فتح التذاكر والردود وتغيير الحالة/الأولوية وتغيير أدوار الأعضاء (بدون نص الرسائل). أحداث تسجيل الدخول تُراجَع من Authentication > Logs في Supabase.
+
+## 11) المجرة وصفحة الإعدادات والدليل (المرحلة 13)
+`galaxy.js` يستبدل الكوكب بمجرة حلزونية خفيفة (SVG + CSS بدون مكتبات) نجومها روابط حقيقية للأقسام: المتجر، المشاريع، الأدوات، الخدمات، المجتمع، عن ALethea. السحب يدوّر المجرة والنقر على نجمة ينقلك للقسم. أول زيارة يظهر دليل «من وين أبدأ؟» مرة واحدة، ويرجع من زر «من وين أبدأ؟» بالرئيسية. `settings.js` يضيف صفحة `#/settings`: اللغة، استوديو الألوان، حجم الخط، شكل الزوايا، إطفاء خلفية الجسيمات، مستوى الحركة، تباين عالٍ، وإعادة ضبط. الاختيارات تُحفظ بالمتصفح؛ ألوان المظهر ومستوى الحركة تتبع الحساب أيضاً عند تفعيل `schema_account.sql`.
