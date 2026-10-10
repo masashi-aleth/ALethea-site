@@ -6,5 +6,5 @@ window.ALETHEA_CONFIG = {
   SUPABASE_ANON_KEY: "sb_publishable_3ITduKrhpn8hKkio9iwUUQ_ATBOqAe_",
   DISCORD_INVITE_URL: "https://discord.gg/7-a",
   // اختياري: Server ID لإظهار عدد المتصلين (يتطلب تفعيل Widget في إعدادات السيرفر)
-  DISCORD_GUILD_ID: "587158004766189"
+  DISCORD_GUILD_ID: "1216666978169913404"
 };
