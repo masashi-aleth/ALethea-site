@@ -74,3 +74,6 @@ NOT done yet (requested): redesigned admin dashboard (`#/dashboard`, dashboard.j
 
 ## Stage 14 (admin layout + login/register): DONE, 20 UI checks passed + earlier suites re-run, screenshots reviewed (390px, 1280px)
 Not done: AI assistant UI (backend draft separate, not connected); dashboard internals untouched; auth pages remain Arabic-only as before.
+
+## Stage 15 (Explore the ALethea Universe section): DONE, 21 UI checks passed + all earlier suites re-run, screenshots reviewed (390px, 1280px)
+Checked: intro/ENTER and hero galaxy untouched, section placement, 5 real destinations navigate to visible views, no overflow at 390/768/1280, Arabic and exact English title, reduced-motion stops the starfield, no JS errors. Found and fixed during review: CSS variable name collision with the site's own `--py`. Not tested: real phones, weak-device performance numbers.

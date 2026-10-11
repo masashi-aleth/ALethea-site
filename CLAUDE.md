@@ -72,3 +72,6 @@ Serve with `python3 -m http.server` and drive with Playwright (Chromium is avail
 
 ## Stage 14 addition (admin layout + auth pages)
 Pure presentation layer: `admin-ui.js` injects `.dash-quick` after `.demo-banner` (re-injected by a MutationObserver because `dashboard.js` rebuilds `#dashRoot`), `.auth-side` into `.auth.panel`, and a show/hide button by wrapping each password `<label>` in `.pw-row` (inputs are NOT moved, so `.err` siblings keep working). The desktop sidebar is CSS only (`#dashRoot` grid, `.dtabs` column; group labels are `::before` on tabs 2/4/7/10 and depend on the TABS order in dashboard.js).
+
+## Stage 15 addition (universe section)
+`universe.js` inserts `section#uni` right before `#homeSections` (after `.scrollhint`). Planets are `a.uni-p[data-k]` pointing at existing routes (store, projects, tools, services, community; all verified as `.view` ids). Canvas starfield pauses when off-screen/hidden/calm. LESSON: `alethea.js` already uses the CSS variables `--px`/`--py` (hero scroll parallax). Never reuse those names; this section uses `--upx`/`--upy`. Also: `floaty` animates the `translate` property, so elements that use it must be centered with `transform`, not `translate`.

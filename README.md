@@ -1,7 +1,7 @@
 # موقع ALethea: دليل الإعداد
 
 الملفات التي ترفعها إلى GitHub (كلها في نفس المجلد الرئيسي):
-`index.html` `style.css` `aurora.css` `aurora-foundation.css` `welcome.css` `welcome.js` `multiverse.css` `multiverse.js` `polish.css` `extras.css` `extras.js` `account-sync.js` `support.js` `ops.js` `galaxy.js` `settings.js` `admin-ui.js` `config.js` `app.js` `data.js` `alethea.js` `dashboard.js` `README.md` `CLAUDE.md` `ALETHEA_PROGRESS.md`.
+`index.html` `style.css` `aurora.css` `aurora-foundation.css` `welcome.css` `welcome.js` `multiverse.css` `multiverse.js` `polish.css` `extras.css` `extras.js` `account-sync.js` `support.js` `ops.js` `galaxy.js` `settings.js` `admin-ui.js` `universe.js` `config.js` `app.js` `data.js` `alethea.js` `dashboard.js` `README.md` `CLAUDE.md` `ALETHEA_PROGRESS.md`.
 أما `schema.sql` و`schema_products.sql` فيُشغَّلان في Supabase ولا يلزم رفعهما (ارفعهما إن أردت حفظهما بالريبو).
 
 ما يفعله كل جزء: شاشة الترحيب (`welcome.*`)، بوابات العوالم في الرئيسية (`multiverse.*`)، المتجر التجريبي (`alethea.js` و`data.js`)، لوحة تجريبية `#/dashboard` (`dashboard.js`)، لوحة أعضاء حقيقية `#/admin` (`app.js` مع Supabase).
@@ -52,3 +52,6 @@
 
 ## 12) لوحة التحكم الجديدة وصفحة الدخول (المرحلة 14)
 `admin-ui.js` + قواعد في `extras.css` فقط (لا تغيير بمنطق `dashboard.js` ولا `app.js`). لوحة التحكم على الشاشات الكبيرة صارت بشريط جانبي مقسّم: المتجر، المحتوى، الكون والمظهر، النظام، مع بطاقات اختصارات (العمليات للمدير، الدعم، الإعدادات، عرض الموقع). على الموبايل تبقى الأقسام شريطاً أفقياً. صفحتا الدخول والتسجيل بعمودين: لوحة تعريف بفوائد الحساب (الحساب اختياري) + النموذج، وزر إظهار/إخفاء كلمة المرور. منطق التحقق والدخول كما هو.
+
+## 13) قسم «استكشف كون ALethea» (المرحلة 15)
+قسم جديد منفصل بالرئيسية بين المقدمة (الهيرو) والأقسام الرئيسية: خلفية فضاء بسديم وتوهج، نجوم Canvas خفيفة، مدارات، ونجمة مركزية، وخمسة كواكب هي روابط حقيقية: المتجر، المشاريع، الأدوات، الخدمات، المجتمع. شاشة الترحيب وزر ENTER ومجرة الهيرو لم تُمس. الحركة تتوقف خارج الشاشة وعند إخفاء التبويب، وتصير سماء ثابتة مع «تقليل الحركة» أو الإعدادات > الحركات > بدون. العنوان بالإنجليزية: EXPLORE THE ALETHEA UNIVERSE، وبالعربية: استكشف كون ALethea.

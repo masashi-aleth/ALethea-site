@@ -137,3 +137,33 @@ html.pro-contrast .glass,html.pro-contrast .panel,html.pro-contrast .pcard{borde
 .pw-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .pw-toggle{background:none;border:0;color:var(--c2);font:inherit;font-size:.85rem;cursor:pointer;padding:4px 6px}
 @media (max-width:859px){.auth-side .auth-orb,.auth-side .eyebrow{display:none}.auth-side h3{font-size:1.25rem}}
+
+/* Phase 15: "Explore the ALethea Universe" section */
+.uni-sec{margin:48px auto 24px}
+.uni-sub{margin:6px 0 0;color:var(--muted)}
+.uni{position:relative;isolation:isolate;height:min(118vw,540px);margin-top:18px;border-radius:var(--r);overflow:hidden;border:1px solid rgba(255,255,255,.14);
+  background:radial-gradient(60% 52% at 20% 30%,color-mix(in srgb,var(--c1) 30%,transparent),transparent 72%),radial-gradient(52% 46% at 82% 72%,color-mix(in srgb,var(--c3) 28%,transparent),transparent 72%),radial-gradient(40% 40% at 56% 18%,color-mix(in srgb,var(--c2) 20%,transparent),transparent 72%),#03051a}
+.uni::before{content:"";position:absolute;inset:-20%;z-index:-1;background:radial-gradient(35% 30% at 70% 35%,color-mix(in srgb,var(--c2) 16%,transparent),transparent 70%),radial-gradient(30% 28% at 25% 75%,color-mix(in srgb,var(--c1) 18%,transparent),transparent 70%);animation:unidrift calc(40s/var(--speed,1)) ease-in-out infinite alternate}
+@keyframes unidrift{to{transform:translate(4%,-3%) scale(1.08)}}
+.uni canvas{position:absolute;inset:-12px;width:calc(100% + 24px);height:calc(100% + 24px);translate:calc(var(--upx,0)*-7px) calc(var(--upy,0)*-5px)}
+.uni-rings{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.uni-rings ellipse{fill:none;stroke:rgba(190,205,255,.16);stroke-width:1;stroke-dasharray:3 6;vector-effect:non-scaling-stroke}
+.uni-star{position:absolute;left:50%;top:46%;width:clamp(70px,17vw,120px);aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,#fff 0,color-mix(in srgb,var(--c2) 70%,#fff) 13%,color-mix(in srgb,var(--c1) 42%,transparent) 40%,transparent 70%);animation:breathe calc(7s/var(--speed,1)) ease-in-out infinite}
+.uni-planets{position:absolute;inset:0;translate:calc(var(--upx,0)*10px) calc(var(--upy,0)*8px);transition:opacity .22s}
+.uni.jump .uni-planets{opacity:0}
+.uni-p{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:6px;min-width:84px;padding:8px;color:var(--text);text-decoration:none;text-align:center;animation:floaty calc(8s/var(--speed,1)) ease-in-out infinite}
+.uni-p b{font-size:.92rem;text-shadow:0 1px 8px rgba(0,0,0,.7)}
+.uni-p small{display:none;max-width:150px;font-size:.76rem;color:var(--muted)}
+.orb{position:relative;width:clamp(54px,13vw,78px);aspect-ratio:1;border-radius:50%;transition:scale .25s,box-shadow .25s;
+  background:radial-gradient(circle at 32% 28%,var(--pl) 0,var(--pm) 46%,var(--pd) 100%);box-shadow:0 0 24px color-mix(in srgb,var(--pm) 55%,transparent),inset -9px -9px 20px rgba(0,0,14,.55)}
+.orb::after{content:"";position:absolute;inset:-7px;border-radius:50%;border:1px solid color-mix(in srgb,var(--pm) 60%,transparent);opacity:.45}
+.uni-p:hover .orb,.uni-p:focus-visible .orb{scale:1.12;box-shadow:0 0 38px color-mix(in srgb,var(--pm) 75%,transparent),inset -9px -9px 20px rgba(0,0,14,.55)}
+.uni-p:focus-visible{outline:2px solid var(--c2);outline-offset:4px;border-radius:18px}
+.p-blue{--pl:#bfe0ff;--pm:#3b82f6;--pd:#0b2a6b}.p-violet{--pl:#e4d4ff;--pm:#8b5cf6;--pd:#2c1470}.p-cyan{--pl:#c8fbff;--pm:#22d3ee;--pd:#063a4d}
+.p-emerald{--pl:#c9ffe9;--pm:#10d9a0;--pd:#05402e}.p-magenta{--pl:#ffd0f0;--pm:#e254c4;--pd:#4a0f3e}
+.p-violet .orb::before{content:"";position:absolute;left:-26%;right:-26%;top:42%;height:16%;border-radius:50%;border:2px solid rgba(228,212,255,.55);transform:rotate(-18deg)}
+@media (min-width:720px){.uni{height:520px}.uni-p small{display:block}}
+@media (prefers-reduced-motion:reduce){.uni::before,.uni-p,.uni-star{animation:none}}
+html[data-motion="off"] .uni::before{animation:none}
+html.pro-lite .uni::before{animation:none}
