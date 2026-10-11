@@ -80,3 +80,6 @@ Checked: intro/ENTER and hero galaxy untouched, section placement, 5 real destin
 
 ## Stage 16 (menu + color studio fix + planet tuning): DONE, 14 new UI checks + earlier suites re-run, screenshots reviewed (390px, 1280px)
 Fixed: "Open color studio" in Settings (panel was closed by the site's own outside-click handler). Menu now grouped; mobile panel opaque. Planets retuned (positions, sizes, parallax depth, palette inside the ALethea colors). Not tested on real phones.
+
+## Entrance flow check: DONE (33 UI checks at 390/768/1280 px)
+Verified the existing flow galaxy -> entrance (solar system + portal) -> ENTER -> site. Fixed one bug: the first-visit guide opened over the galaxy screen. Only `galaxy.js` changed. `welcome.js`, `welcome.css`, `alethea.js` untouched.

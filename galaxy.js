@@ -77,8 +77,9 @@
   }
   function autoGuide() {
     var tries = 0, iv = setInterval(function () {
-      if (++tries > 60) return clearInterval(iv);
-      if (document.getElementById("welcome")) return;            // wait until the welcome screen is gone
+      if (++tries > 1200) return clearInterval(iv);
+      // wait until the whole entrance (galaxy screen -> welcome screen) is finished, so the guide never opens on top of it
+      if (document.getElementById("wlGalaxy") || document.getElementById("welcome") || document.documentElement.classList.contains("wl-pending")) return;
       clearInterval(iv); var done = false; try { done = localStorage.getItem(KEY); } catch (e) {}
       if (!done && /^(#\/?)?$/.test(location.hash)) guide();
     }, 500);
