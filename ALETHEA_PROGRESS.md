@@ -71,3 +71,6 @@ Support, Operations and the home FAQ now use the site's own system (`pagehead`, 
 
 ## Stage 13 (galaxy hero + guide + settings): DONE, 15 UI checks passed, screenshots reviewed (390px, 1280px)
 NOT done yet (requested): redesigned admin dashboard (`#/dashboard`, dashboard.js 51 KB, not reviewed yet), nicer login page, AI assistant UI. The AI backend draft is in a separate folder and not connected.
+
+## Stage 14 (admin layout + login/register): DONE, 20 UI checks passed + earlier suites re-run, screenshots reviewed (390px, 1280px)
+Not done: AI assistant UI (backend draft separate, not connected); dashboard internals untouched; auth pages remain Arabic-only as before.

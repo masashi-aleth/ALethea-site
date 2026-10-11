@@ -105,3 +105,35 @@ html.pro-contrast{--muted:#d6dcf5}
 html.pro-contrast .glass,html.pro-contrast .panel,html.pro-contrast .pcard{border-color:rgba(255,255,255,.42)}
 .pro-hint{margin-inline-end:8px}
 .pro-guide{background:rgba(8,12,34,.96)}
+
+/* Phase 14: admin dashboard layout + auth pages */
+.dash-quick{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:0 0 18px}
+.dq{display:flex;flex-direction:column;gap:2px;padding:14px 16px;color:inherit;text-decoration:none;transition:border-color .2s,transform .2s}
+.dq:hover,.dq:focus-visible{border-color:var(--c2);transform:translateY(-2px)}.dq small{color:var(--muted)}
+@media (min-width:1000px){
+  #dashRoot{display:grid;grid-template-columns:240px minmax(0,1fr);column-gap:28px;align-items:start}
+  #dashRoot>*{grid-column:2;min-width:0}
+  #dashRoot>.dtabs{grid-column:1;grid-row:1/span 8;flex-direction:column;gap:6px;overflow:visible;position:sticky;top:84px;margin:0;padding:14px 10px;border:1px solid rgba(255,255,255,.12);border-radius:var(--r);background:var(--glass);backdrop-filter:blur(12px)}
+  #dashRoot>.dtabs .dtab{width:100%;justify-content:flex-start}
+  #dashRoot>.dtabs .dtab:nth-child(2),#dashRoot>.dtabs .dtab:nth-child(4),#dashRoot>.dtabs .dtab:nth-child(7),#dashRoot>.dtabs .dtab:nth-child(10){position:relative;margin-top:26px}
+  #dashRoot>.dtabs .dtab:nth-child(n)::before{position:absolute;top:-21px;inset-inline-start:6px;font-size:.72rem;letter-spacing:.04em;color:var(--muted);pointer-events:none}
+  #dashRoot>.dtabs .dtab:nth-child(2)::before{content:"المتجر"}#dashRoot>.dtabs .dtab:nth-child(4)::before{content:"المحتوى"}
+  #dashRoot>.dtabs .dtab:nth-child(7)::before{content:"الكون والمظهر"}#dashRoot>.dtabs .dtab:nth-child(10)::before{content:"النظام"}
+  html[lang="en"] #dashRoot>.dtabs .dtab:nth-child(2)::before{content:"Store"}html[lang="en"] #dashRoot>.dtabs .dtab:nth-child(4)::before{content:"Content"}
+  html[lang="en"] #dashRoot>.dtabs .dtab:nth-child(7)::before{content:"Universe & look"}html[lang="en"] #dashRoot>.dtabs .dtab:nth-child(10)::before{content:"System"}
+}
+.auth.panel{max-width:min(920px,100%)}
+.auth-side{display:flex;flex-direction:column;gap:8px;padding:22px;margin-bottom:18px;border-radius:calc(var(--r) - 4px);border:1px solid rgba(255,255,255,.14);background:linear-gradient(160deg,color-mix(in srgb,var(--c1) 26%,transparent),color-mix(in srgb,var(--c3) 20%,transparent))}
+.auth-side h3{margin:0;font-size:1.6rem}.auth-side p{margin:0;color:var(--muted)}
+.auth-side ul{margin:6px 0 0;padding:0;list-style:none;display:grid;gap:8px}
+.auth-side li{padding-inline-start:22px;position:relative}.auth-side li::before{content:"";position:absolute;inset-inline-start:0;top:.55em;width:9px;height:9px;border-radius:50%;background:var(--c2);box-shadow:0 0 10px var(--c2)}
+.auth-orb{width:46px;height:46px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,var(--c2) 30%,var(--c1) 70%,transparent 72%);box-shadow:0 0 28px color-mix(in srgb,var(--c2) 55%,transparent)}
+@media (max-width:859px){.auth-side ul{display:none}.auth-side{padding:16px}}
+@media (min-width:860px){
+  .auth.panel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:36px;align-items:start}
+  .auth.panel>*{grid-column:2}
+  .auth.panel>.auth-side{grid-column:1;grid-row:1/span 8;margin:0;align-self:stretch;justify-content:center;padding:32px}
+}
+.pw-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.pw-toggle{background:none;border:0;color:var(--c2);font:inherit;font-size:.85rem;cursor:pointer;padding:4px 6px}
+@media (max-width:859px){.auth-side .auth-orb,.auth-side .eyebrow{display:none}.auth-side h3{font-size:1.25rem}}

@@ -69,3 +69,6 @@ Serve with `python3 -m http.server` and drive with Playwright (Chromium is avail
 
 ## Stage 13 addition (galaxy, guide, settings)
 `galaxy.js`: replaces the stage contents with an SVG spiral galaxy (`.gx`) and puts 6 real links (`.gx-node`) in `#scene`; node `pointerdown` stops propagation so clicks work while `initHero` drag still works on empty space; guide dialog shown once (`alethea.guide.v1`) after `#welcome` is gone. `settings.js`: view `#settings`, prefs in `alethea.prefs.v1` (font-size %, `--r`, `pro-nofx`, `pro-contrast`); motion goes through `ALETHEA.theme.motion` + `applyTheme()` so it syncs with the account. Lite devices get fewer stars.
+
+## Stage 14 addition (admin layout + auth pages)
+Pure presentation layer: `admin-ui.js` injects `.dash-quick` after `.demo-banner` (re-injected by a MutationObserver because `dashboard.js` rebuilds `#dashRoot`), `.auth-side` into `.auth.panel`, and a show/hide button by wrapping each password `<label>` in `.pw-row` (inputs are NOT moved, so `.err` siblings keep working). The desktop sidebar is CSS only (`#dashRoot` grid, `.dtabs` column; group labels are `::before` on tabs 2/4/7/10 and depend on the TABS order in dashboard.js).
