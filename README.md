@@ -1,7 +1,7 @@
 # موقع ALethea: دليل الإعداد
 
 الملفات التي ترفعها إلى GitHub (كلها في نفس المجلد الرئيسي):
-`index.html` `style.css` `aurora.css` `aurora-foundation.css` `welcome.css` `welcome.js` `multiverse.css` `multiverse.js` `polish.css` `extras.css` `extras.js` `account-sync.js` `support.js` `ops.js` `galaxy.js` `settings.js` `admin-ui.js` `universe.js` `config.js` `app.js` `data.js` `alethea.js` `dashboard.js` `README.md` `CLAUDE.md` `ALETHEA_PROGRESS.md`.
+`index.html` `style.css` `aurora.css` `aurora-foundation.css` `welcome.css` `welcome.js` `multiverse.css` `multiverse.js` `polish.css` `extras.css` `extras.js` `account-sync.js` `support.js` `ops.js` `galaxy.js` `settings.js` `admin-ui.js` `universe.js` `menu.js` `config.js` `app.js` `data.js` `alethea.js` `dashboard.js` `README.md` `CLAUDE.md` `ALETHEA_PROGRESS.md`.
 أما `schema.sql` و`schema_products.sql` فيُشغَّلان في Supabase ولا يلزم رفعهما (ارفعهما إن أردت حفظهما بالريبو).
 
 ما يفعله كل جزء: شاشة الترحيب (`welcome.*`)، بوابات العوالم في الرئيسية (`multiverse.*`)، المتجر التجريبي (`alethea.js` و`data.js`)، لوحة تجريبية `#/dashboard` (`dashboard.js`)، لوحة أعضاء حقيقية `#/admin` (`app.js` مع Supabase).
@@ -55,3 +55,6 @@
 
 ## 13) قسم «استكشف كون ALethea» (المرحلة 15)
 قسم جديد منفصل بالرئيسية بين المقدمة (الهيرو) والأقسام الرئيسية: خلفية فضاء بسديم وتوهج، نجوم Canvas خفيفة، مدارات، ونجمة مركزية، وخمسة كواكب هي روابط حقيقية: المتجر، المشاريع، الأدوات، الخدمات، المجتمع. شاشة الترحيب وزر ENTER ومجرة الهيرو لم تُمس. الحركة تتوقف خارج الشاشة وعند إخفاء التبويب، وتصير سماء ثابتة مع «تقليل الحركة» أو الإعدادات > الحركات > بدون. العنوان بالإنجليزية: EXPLORE THE ALETHEA UNIVERSE، وبالعربية: استكشف كون ALethea.
+
+## 14) القائمة المنظّمة وضبط الكواكب (المرحلة 16)
+`menu.js` يرتّب القائمة الرئيسية بثلاث مجموعات بعناوين: «استكشف» (الرئيسية، استكشف، المتجر، المشاريع، الأدوات، الخدمات)، «المجتمع والمساعدة» (المجتمع، الدعم، عن ALethea)، «مساحتك» (الإعدادات، لوحة التحكم، لوحة الأعضاء، العمليات، ثم الدخول/التسجيل). على الشاشات الكبيرة تظهر كثلاثة أعمدة، وعلى الموبايل كقائمة واحدة بخلفية معتمة. إصلاح: زر «افتح استوديو الألوان» في الإعدادات كان يغلق اللوحة فوراً؛ صار يفتحها بعد انتهاء النقرة. كواكب قسم الكون أُعيد ضبط مواضعها وأحجامها وعمقها، وألوانها ضمن لوحة ALethea (أزرق، بنفسجي بحلقة، سماوي، زمردي، نيلي).

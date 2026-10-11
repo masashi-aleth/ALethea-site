@@ -10,7 +10,7 @@
       p: { store: ["Store", "Demo products and a simulated cart"], projects: ["Projects", "ALethea showcase"], tools: ["Tools", "Small tools you can try"], services: ["Services", "What we offer"], community: ["Community", "Join the Discord server"] } }
   };
   var CX = 50, CY = 46;                                             // star position (% of the box)
-  var PL = [["store", 26, 30, "blue"], ["projects", 76, 22, "violet"], ["tools", 74, 55, "cyan"], ["services", 24, 64, "emerald"], ["community", 50, 86, "magenta"]];
+  var PL = [["store", 22, 27, "blue", 1.12, 14], ["projects", 71, 19, "violet", 1, 8], ["tools", 83, 58, "cyan", .86, 18], ["services", 29, 67, "emerald", .94, 11], ["community", 56, 83, "indigo", 1.06, 6]];   // [route, x%, y%, palette, size, parallax depth]
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var el = function (t, c, x) { var n = document.createElement(t); if (c) n.className = c; if (x != null) n.textContent = x; return n; };
   var lang = function () { return document.documentElement.lang === "en" ? "en" : "ar"; };
@@ -65,7 +65,7 @@
     var box = el("div", "uni"), cv = el("canvas"), pls = el("div", "uni-planets"); cv.setAttribute("aria-hidden", "true");
     box.append(cv, rings(), el("i", "uni-star"));
     PL.forEach(function (p, i) {
-      var a = el("a", "uni-p p-" + p[3]); a.href = "#/" + p[0]; a.dataset.k = p[0]; a.style.left = p[1] + "%"; a.style.top = p[2] + "%"; a.style.animationDelay = (-i * 1.7) + "s";
+      var a = el("a", "uni-p p-" + p[3]); a.href = "#/" + p[0]; a.dataset.k = p[0]; a.style.left = p[1] + "%"; a.style.top = p[2] + "%"; a.style.animationDelay = (-i * 1.7) + "s"; a.style.setProperty("--s", p[4]); a.style.setProperty("--d", p[5]);
       a.append(el("span", "orb"), el("b"), el("small"));
       a.addEventListener("click", function (e) {
         if (e.ctrlKey || e.metaKey || e.shiftKey || e.button) return; e.preventDefault();

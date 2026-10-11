@@ -47,7 +47,9 @@
     var root = $("#settingsRoot"); navLink(); if (!root || !onRoute()) return; var t = S[lang()]; root.textContent = "";
     var w = el("div", "wrap sup"), head = el("div", "pagehead"); head.append(el("span", "eyebrow", t.nav), el("h1", "", t.title), el("p", "", t.sub)); w.append(head);
     w.append(row(t.lang, t.langS, seg([["العربية", "ar"], ["English", "en"]], lang(), function (v) { if (v !== lang()) { var b = $("#langBtn"); if (b) b.click(); } })));
-    var op = el("button", "btn", t.open); op.type = "button"; op.addEventListener("click", function () { var b = $("#themeBtn"); if (b) b.click(); }); w.append(row(t.colors, t.colorsS, op));
+    var op = el("button", "btn", t.open); op.type = "button"; op.addEventListener("click", function () {   // deferred: the site closes the panel on any click outside it, including this one
+      setTimeout(function () { var b = $("#themeBtn"), p = $("#themePanel"); if (b && !(p && p.classList.contains("open"))) b.click(); }, 0);
+    }); w.append(row(t.colors, t.colorsS, op));
     w.append(row(t.fs, t.fsS, seg(t.fsO, P.fs, function (v) { P.fs = v; save(); })));
     w.append(row(t.r, t.rS, seg(t.rO, P.r, function (v) { P.r = v; save(); })));
     w.append(row(t.fx, t.fxS, seg([[t.on, 1], [t.off, 0]], P.fx, function (v) { P.fx = v; save(); })));

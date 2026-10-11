@@ -77,3 +77,6 @@ Not done: AI assistant UI (backend draft separate, not connected); dashboard int
 
 ## Stage 15 (Explore the ALethea Universe section): DONE, 21 UI checks passed + all earlier suites re-run, screenshots reviewed (390px, 1280px)
 Checked: intro/ENTER and hero galaxy untouched, section placement, 5 real destinations navigate to visible views, no overflow at 390/768/1280, Arabic and exact English title, reduced-motion stops the starfield, no JS errors. Found and fixed during review: CSS variable name collision with the site's own `--py`. Not tested: real phones, weak-device performance numbers.
+
+## Stage 16 (menu + color studio fix + planet tuning): DONE, 14 new UI checks + earlier suites re-run, screenshots reviewed (390px, 1280px)
+Fixed: "Open color studio" in Settings (panel was closed by the site's own outside-click handler). Menu now grouped; mobile panel opaque. Planets retuned (positions, sizes, parallax depth, palette inside the ALethea colors). Not tested on real phones.
