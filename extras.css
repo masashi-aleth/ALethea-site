@@ -190,3 +190,11 @@ header #nav .nav-h{font-size:.72rem;letter-spacing:.06em;color:var(--muted);padd
   header #nav{inset-inline-start:auto;inset-inline-end:16px;top:calc(100% + 8px);width:min(900px,calc(100vw - 32px));border:1px solid rgba(255,255,255,.16);border-radius:var(--r)}
   header #nav.open{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 18px;padding:14px 18px 18px}
 }
+
+/* Phase 17: small refinements found by the audit.
+   1) specific transitions + ease-out instead of "all" on chips and gallery thumbnails
+   2) comfortable tap areas on touch screens (icon-only logo on narrow phones, "view all" links) */
+.chip{transition:background-color .2s var(--ease),border-color .2s var(--ease),color .2s var(--ease),transform .16s var(--ease),box-shadow .2s var(--ease)}
+.thumbs button{transition:opacity .2s var(--ease),border-color .2s var(--ease),transform .16s var(--ease)}
+@media (max-width:430px){header .brand{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center}}
+@media (pointer:coarse){.sec-head .link{display:inline-flex;align-items:center;min-height:40px;padding-inline:6px}}

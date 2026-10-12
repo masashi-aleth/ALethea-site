@@ -1,5 +1,7 @@
-/* ALethea — Phase 2: welcome screen. Load in <head> (sync, tiny). Builds its own DOM, so index.html needs no markup.
-   Shows once per browser session. Never traps: ENTER button, Esc key. Skipped for admin/login/OAuth-return URLs. */
+/* ALethea: entrance. Load in <head> (sync, tiny). Builds its own DOM, so index.html needs no markup.
+   Flow: screen 1 = animated 2D spiral galaxy (visitor must click/tap) -> screen 2 = the ALethea entrance (solar system, galaxy-portal
+   background, ENTER button) -> the unchanged site. Shows once per browser session. Never traps: Esc moves forward on each screen.
+   Skipped for admin/login/OAuth-return URLs and when the dashboard switch turns the welcome off. */
 (function () {
 "use strict";
 var root = document.documentElement, KEY = "alethea.entered", pending = false;
@@ -18,28 +20,168 @@ function motionOff() {
   try { var t = JSON.parse(localStorage.getItem("alethea.theme.v1") || "null"); if (t && Number(t.motion) === 0) r = true; } catch (e) {}
   return r;
 }
-function has3d() { try { return !!(window.CSS && CSS.supports && CSS.supports("transform-style", "preserve-3d")); } catch (e) { return false; } }
+function lite() { try { return (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 2; } catch (e) { return false; } }
 function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text) n.textContent = text; return n; }
+function rng(seed) { return function () { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }; }
+function offscreen(S) { var c = document.createElement("canvas"); c.width = c.height = S; return c; }
 
-function build() {
+/* Pre-rendered spiral galaxy (drawn once, then only rotated each frame, which is very cheap) */
+function galaxyBitmap(S, light) {
+  var c = offscreen(S), g = c.getContext("2d"), R = S / 2, rnd = rng(7), sc = S / 1000, i, k, first;
+  var arm = ["59,130,246", "34,211,238", "139,92,246", "16,217,160"];
+  function th(k, r) { return k * 1.5708 + (r / R) * 5.4; }
+  g.globalCompositeOperation = "lighter";
+  var halo = g.createRadialGradient(R, R, 0, R, R, R);
+  halo.addColorStop(0, "rgba(255,255,255,.95)"); halo.addColorStop(.03, "rgba(210,246,255,.85)"); halo.addColorStop(.09, "rgba(70,200,255,.5)");
+  halo.addColorStop(.25, "rgba(59,130,246,.22)"); halo.addColorStop(.55, "rgba(139,92,246,.09)"); halo.addColorStop(1, "rgba(0,0,0,0)");
+  g.fillStyle = halo; g.fillRect(0, 0, S, S);
+  g.lineCap = g.lineJoin = "round";
+  for (k = 0; k < 4; k++) {                                          // nebula arms: three stacked strokes = soft glow without blur filters
+    var main = k % 2 === 0;
+    [[.17, .045], [.09, .08], [.035, .15]].forEach(function (L) {
+      g.beginPath(); first = true;
+      for (var r = R * .05; r <= R * .98; r += R * .012) { var a = th(k, r), x = R + r * Math.cos(a), y = R + r * Math.sin(a); if (first) { g.moveTo(x, y); first = false; } else g.lineTo(x, y); }
+      var gr = g.createRadialGradient(R, R, 0, R, R, R);
+      gr.addColorStop(0, "rgba(255,255,255,.9)"); gr.addColorStop(.14, "rgba(" + arm[k] + ",.95)"); gr.addColorStop(.75, "rgba(" + arm[k] + ",.45)"); gr.addColorStop(1, "rgba(" + arm[k] + ",0)");
+      g.strokeStyle = gr; g.lineWidth = R * L[0] * (main ? 1 : .7); g.globalAlpha = L[1] * (main ? 1 : .75); g.stroke();
+    });
+  }
+  g.globalCompositeOperation = "source-over"; g.globalAlpha = .3; g.strokeStyle = "rgb(3,5,20)"; g.lineWidth = R * .02;   // dust lanes
+  [0, 2].forEach(function (k) { g.beginPath(); first = true; for (var r = R * .1; r <= R * .95; r += R * .015) { var a = th(k, r) + .17, x = R + r * Math.cos(a), y = R + r * Math.sin(a); if (first) { g.moveTo(x, y); first = false; } else g.lineTo(x, y); } g.stroke(); });
+  g.globalCompositeOperation = "lighter"; g.globalAlpha = 1;
+  var N = light ? 1500 : 3200;
+  for (i = 0; i < N; i++) {                                           // stars hug the arms; bright and warm near the core, cool and violet outside
+    var k2 = (rnd() * 4) | 0, t = Math.pow(rnd(), 1.1), r2 = R * (.03 + .95 * t), jit = (rnd() + rnd() + rnd() - 1.5) * (.28 + .55 * t);
+    var a2 = rnd() < .22 ? rnd() * 6.283 : th(k2, r2) + jit, x2 = R + r2 * Math.cos(a2), y2 = R + r2 * Math.sin(a2);
+    var col = t < .22 ? (rnd() < .6 ? "255,255,255" : "190,240,255") : t < .6 ? (rnd() < .5 ? "170,215,255" : "120,230,255") : (rnd() < .5 ? "200,180,255" : "150,245,215");
+    g.fillStyle = "rgba(" + col + "," + (.35 + rnd() * .65).toFixed(2) + ")"; var s = (.7 + rnd() * 1.6) * Math.max(1, sc * 1.4); g.fillRect(x2, y2, s, s);
+  }
+  var core = g.createRadialGradient(R, R, 0, R, R, R * .12);
+  core.addColorStop(0, "rgba(255,255,255,1)"); core.addColorStop(.35, "rgba(200,245,255,.75)"); core.addColorStop(1, "rgba(60,170,255,0)");
+  g.fillStyle = core; g.fillRect(0, 0, S, S);
+  return c;
+}
+
+/* Pre-rendered vortex layer for the portal background */
+function swirlBitmap(S, n, dir, cols) {
+  var c = offscreen(S), g = c.getContext("2d"), R = S / 2, j, first;
+  g.lineCap = "round"; g.globalCompositeOperation = "lighter";
+  for (j = 0; j < n; j++) {
+    [[.15, .05], [.08, .1], [.03, .22]].forEach(function (L) {
+      g.beginPath(); first = true;
+      for (var r = R * .05; r <= R * .98; r += R * .012) { var a = j * 6.2832 / n + dir * (r / R) * 5.2, x = R + r * Math.cos(a), y = R + r * Math.sin(a); if (first) { g.moveTo(x, y); first = false; } else g.lineTo(x, y); }
+      g.strokeStyle = "rgb(" + cols[j % cols.length] + ")"; g.lineWidth = R * L[0]; g.globalAlpha = L[1]; g.stroke();
+    });
+  }
+  g.globalCompositeOperation = "destination-in"; g.globalAlpha = 1;       // fade the middle and the rim so it reads as a vortex
+  var m = g.createRadialGradient(R, R, 0, R, R, R);
+  m.addColorStop(0, "rgba(0,0,0,0)"); m.addColorStop(.07, "rgba(0,0,0,0)"); m.addColorStop(.25, "rgba(0,0,0,1)"); m.addColorStop(.62, "rgba(0,0,0,.85)"); m.addColorStop(1, "rgba(0,0,0,0)");
+  g.fillStyle = m; g.fillRect(0, 0, S, S);
+  return c;
+}
+
+/* ---------- Screen 1: animated 2D galaxy. The visitor must click/tap (or press Enter/Space/Esc) ---------- */
+function galaxyScreen(next) {
+  var still = motionOff(), light = lite(), w = el("div");
+  w.id = "wlGalaxy"; w.lang = "en"; w.setAttribute("role", "dialog"); w.setAttribute("aria-modal", "true"); w.setAttribute("aria-label", "ALethea galaxy");
+  if (still) w.classList.add("wl-still");
+  var cv = el("canvas", "wl-gx-cv"); cv.setAttribute("aria-hidden", "true");
+  var hint = el("p", "wl-gx-hint", "TOUCH THE GALAXY TO ENTER"), btn = el("button", "wl-gx-btn"); btn.type = "button"; btn.setAttribute("aria-label", "Touch the galaxy to enter");
+  w.appendChild(cv); w.appendChild(hint); w.appendChild(btn); document.body.appendChild(w);
+  var ctx = cv.getContext && cv.getContext("2d");
+  if (!ctx) { document.body.removeChild(w); next(); return; }
+  var W = 0, H = 0, dpr = Math.min(window.devicePixelRatio || 1, 1.5), bmp = null, twk = [], dust = [], raf = 0, last = 0, done = false, rt = 0, DC = ["59,130,246", "34,211,238", "139,92,246", "16,217,160"];
+
+  function draw(t) {
+    ctx.clearRect(0, 0, W, H); ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = 1;
+    var k = W > H ? .86 : 1, d = Math.max(W, H) * 1.02, i, s;
+    ctx.save(); ctx.translate(W / 2, H / 2); ctx.scale(1, k); ctx.rotate(still ? 0 : t * .000045); ctx.drawImage(bmp, -d / 2, -d / 2, d, d); ctx.restore();
+    var cr = d * .07 * (still ? 1 : 1 + .035 * Math.sin(t * .0014)), g = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, cr);
+    g.addColorStop(0, "rgba(255,255,255,.55)"); g.addColorStop(1, "rgba(80,190,255,0)"); ctx.fillStyle = g; ctx.fillRect(W / 2 - cr, H / 2 - cr, cr * 2, cr * 2);
+    for (i = 0; i < twk.length; i++) { s = twk[i]; ctx.globalAlpha = still ? .6 : .2 + .8 * (.5 + .5 * Math.sin(t * s.s + s.p)); ctx.fillStyle = "rgb(" + s.c + ")"; ctx.fillRect(s.x, s.y, s.r, s.r); }
+    for (i = 0; i < dust.length; i++) {
+      s = dust[i]; if (!still) { s.x += s.vx; s.y += s.vy; if (s.x < -5) s.x = W + 5; else if (s.x > W + 5) s.x = -5; if (s.y < -5) s.y = H + 5; else if (s.y > H + 5) s.y = -5; }
+      ctx.globalAlpha = s.a; ctx.fillStyle = "rgb(" + s.c + ")"; ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, 6.283); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+  function size() {
+    W = innerWidth; H = innerHeight; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    bmp = galaxyBitmap(Math.min(light ? 900 : 1500, Math.round(Math.max(W, H) * dpr * 1.05)), light);
+    var i, n = light ? 90 : 170, m = light ? 24 : 48; twk = []; dust = [];
+    for (i = 0; i < n; i++) twk.push({ x: Math.random() * W, y: Math.random() * H, p: Math.random() * 6.283, s: .0008 + Math.random() * .0022, r: .6 + Math.random() * 1.2, c: Math.random() < .4 ? "190,240,255" : "255,255,255" });
+    for (i = 0; i < m; i++) dust.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .12, vy: (Math.random() - .5) * .12, r: 1 + Math.random() * 2.4, a: .08 + Math.random() * .18, c: DC[i % 4] });
+    draw(last || 0);
+  }
+  function loop(ts) { raf = requestAnimationFrame(loop); if (document.hidden) return; if (light && ts - last < 32) return; last = ts; draw(ts); }
+  function onResize() { clearTimeout(rt); rt = setTimeout(size, 160); }
+  function onKey(e) { if (e.key === "Escape") { e.preventDefault(); proceed(); } }
+  function proceed() {
+    if (done) return; done = true; document.removeEventListener("keydown", onKey);
+    w.classList.add("wl-gx-go"); next();                                // the entrance is built underneath while the galaxy zooms and fades
+    setTimeout(function () { cancelAnimationFrame(raf); removeEventListener("resize", onResize); clearTimeout(rt); if (w.parentNode) w.parentNode.removeChild(w); }, still ? 220 : 1000);
+  }
+  size(); if (!still) raf = requestAnimationFrame(loop);
+  addEventListener("resize", onResize); btn.addEventListener("click", proceed); document.addEventListener("keydown", onKey);
+  try { btn.focus({ preventScroll: true }); } catch (e) {}
+}
+
+/* ---------- Entrance background: giant galaxy portal (vortex + tunnel rings + luminous center) ---------- */
+function portal(w, scene, still, light) {
+  var cv = el("canvas", "wl-portal"); cv.setAttribute("aria-hidden", "true"); w.insertBefore(cv, w.firstChild);
+  var ctx = cv.getContext && cv.getContext("2d"); if (!ctx) return function () {};
+  var dpr = Math.min(window.devicePixelRatio || 1, 1.5), W = 0, H = 0, cx = 0, cy = 0, big = 0, A = null, B = null, raf = 0, last = 0, rt = 0, cols = ["34,211,238", "59,130,246", "139,92,246", "16,217,160", "34,211,238"];
+  function draw(t) {
+    ctx.clearRect(0, 0, W, H); ctx.globalCompositeOperation = "lighter"; ctx.globalAlpha = 1;
+    var g = ctx.createRadialGradient(cx, cy, 0, cx, cy, big * .4);
+    g.addColorStop(0, "rgba(120,220,255,.35)"); g.addColorStop(.25, "rgba(59,130,246,.18)"); g.addColorStop(.6, "rgba(139,92,246,.07)"); g.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(still ? 0 : t * .00006); ctx.globalAlpha = .9; ctx.drawImage(A, -big / 2, -big / 2, big, big); ctx.restore();
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(still ? .6 : -t * .0001); ctx.globalAlpha = .7; ctx.drawImage(B, -big * .4, -big * .4, big * .8, big * .8); ctx.restore();
+    ctx.lineWidth = 1.2;
+    for (var i = 0; i < 5; i++) { var p = ((still ? .2 : t / 7000) + i / 5) % 1, rr = big * .015 + big * .26 * p * p, a = (1 - p) * .4 * Math.min(1, p * 5); ctx.strokeStyle = "rgba(130,225,255," + a.toFixed(3) + ")"; ctx.beginPath(); ctx.arc(cx, cy, rr, 0, 6.283); ctx.stroke(); }
+    var pr = big * .045 * (1 + (still ? 0 : .08 * Math.sin(t * .002))), c = ctx.createRadialGradient(cx, cy, 0, cx, cy, pr);
+    c.addColorStop(0, "rgba(255,255,255,.85)"); c.addColorStop(.4, "rgba(150,230,255,.45)"); c.addColorStop(1, "rgba(60,160,255,0)"); ctx.fillStyle = c; ctx.fillRect(cx - pr, cy - pr, pr * 2, pr * 2); ctx.globalAlpha = 1;
+  }
+  function size() {
+    W = innerWidth; H = innerHeight; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var r = scene.getBoundingClientRect(); cx = r.left + r.width / 2; cy = r.top + r.height / 2; big = Math.max(W, H) * 1.55;   // centered on the solar system
+    var S = light ? 640 : 1024; A = swirlBitmap(S, 5, 1, cols); B = swirlBitmap(S, 3, -1, cols); draw(last || 0);
+  }
+  function loop(ts) { raf = requestAnimationFrame(loop); if (document.hidden) return; if (light && ts - last < 32) return; last = ts; draw(ts); }
+  function onResize() { clearTimeout(rt); rt = setTimeout(size, 160); }
+  size(); if (!still) raf = requestAnimationFrame(loop); addEventListener("resize", onResize);
+  return function stop() { cancelAnimationFrame(raf); removeEventListener("resize", onResize); clearTimeout(rt); };
+}
+
+/* ---------- Screen 2: the ALethea entrance (title, credit and ENTER are unchanged; planet -> solar system; new background) ---------- */
+var SYS = [[30, 3, 8, .1, "p1"], [44, 4.4, 13, .55, "p2"], [58, 5.2, 19, .3, "p3"], [72, 4, 26, .8, "p4"], [86, 9, 38, .15, "p5 ring"], [100, 6.2, 52, .65, "p6"]];   // [orbit diameter, planet size, period s, phase, style]
+
+function entrance() {
   if (!pending) return;
   try {
-    var still = motionOff(), flat = !has3d();
+    var still = motionOff(), light = lite();
     var w = el("div"); w.id = "welcome"; w.setAttribute("role", "dialog"); w.setAttribute("aria-modal", "true"); w.setAttribute("aria-labelledby", "wlTitle"); w.lang = "en";
-    if (still) w.classList.add("wl-still"); if (flat) w.classList.add("wl-flat");
+    if (still) w.classList.add("wl-still");
     var canvas = still ? null : el("canvas", "wl-fx"); if (canvas) canvas.setAttribute("aria-hidden", "true");
     var haze = el("div", "wl-haze"); haze.setAttribute("aria-hidden", "true");
-    var scene = el("div", "wl-scene"), stage = el("div", "wl-stage"); scene.setAttribute("aria-hidden", "true");
-    ["wl-ring wl-r1", "wl-ring wl-r2", "wl-ring wl-r3", "wl-disc", "wl-core"].forEach(function (c) { stage.appendChild(el("i", c)); });
-    scene.appendChild(stage);
+    var scene = el("div", "wl-scene"), sys = el("div", "wl-sys"); scene.setAttribute("aria-hidden", "true");
+    sys.appendChild(el("i", "wl-belt")); sys.appendChild(el("i", "wl-sun"));
+    SYS.forEach(function (o) {
+      var orb = el("div", "wl-orb"), p = el("i", "wl-pl " + o[4]);
+      orb.style.setProperty("--w", o[0]); orb.style.setProperty("--t", o[2] + "s"); orb.style.setProperty("--a", (-o[2] * o[3]).toFixed(2) + "s"); orb.style.setProperty("--k", o[3]);
+      p.style.setProperty("--s", o[1]); orb.appendChild(p); sys.appendChild(orb);
+    });
+    scene.appendChild(sys);
     var h1 = el("h1", "wl-title", "WELCOME TO ALETHEA"); h1.id = "wlTitle";
     var credit = el("p", "wl-credit", "Made & Developed by Masashi");
     var btn = el("button", "wl-enter", "ENTER"); btn.type = "button";
     if (canvas) w.appendChild(canvas);
     w.appendChild(haze); w.appendChild(scene); w.appendChild(h1); w.appendChild(credit); w.appendChild(btn);
     document.body.appendChild(w);
+    var stopPortal = portal(w, scene, still, light);
 
-    var raf = 0, tiltRaf = 0, leaving = false, ctx = null, dots = [];
+    var raf = 0, leaving = false, ctx = null, dots = [];
 
     /* particles: one light canvas, paused when hidden */
     if (canvas && canvas.getContext) {
@@ -63,18 +205,6 @@ function build() {
       })();
     }
 
-    /* pointer / touch tilt (rAF throttled) */
-    function tilt(x, y) {
-      if (tiltRaf || still || flat) return;
-      tiltRaf = requestAnimationFrame(function () {
-        tiltRaf = 0;
-        stage.style.setProperty("--wy", (18 + (x / innerWidth - .5) * 50).toFixed(1) + "deg");
-        stage.style.setProperty("--wx", (-10 - (y / innerHeight - .5) * 40).toFixed(1) + "deg");
-      });
-    }
-    function onMove(e) { tilt(e.clientX, e.clientY); }
-    w.addEventListener("pointermove", onMove);
-
     /* enter */
     function onKey(e) { if (e.key === "Escape") go(); }
     function go() {
@@ -84,6 +214,7 @@ function build() {
     }
     function finish() {
       if (raf) cancelAnimationFrame(raf);
+      stopPortal();
       document.removeEventListener("keydown", onKey);
       if (w.parentNode) w.parentNode.removeChild(w);
       var m = document.getElementById("main");
@@ -98,7 +229,17 @@ function build() {
     if (window.console) console.error("welcome failed:", err);
   }
 }
+
+function build() {
+  if (!pending) return;
+  try { galaxyScreen(entrance); }
+  catch (err) {                                                          // if the galaxy fails for any reason, fall back to the plain entrance
+    var g = document.getElementById("wlGalaxy"); if (g && g.parentNode) g.parentNode.removeChild(g);
+    if (window.console) console.error("galaxy failed:", err);
+    entrance();
+  }
+}
 if (document.body) build(); else document.addEventListener("DOMContentLoaded", build);
-/* last-resort safety: if the overlay never appears, reveal the site */
-setTimeout(function () { if (pending && !document.getElementById("welcome")) release(); }, 3000);
+/* last-resort safety: if no overlay ever appears, reveal the site */
+setTimeout(function () { if (pending && !document.getElementById("welcome") && !document.getElementById("wlGalaxy")) release(); }, 3000);
 })();

@@ -1,0 +1,44 @@
+/* finish.css: restrained polish layer (loads last; remove this file to undo everything here).
+   Principles: short ease-out transitions (<250ms) on named properties, tactile press feedback, one consistent focus ring,
+   touch-safe sizes, no extra glow, motion off for people who ask for it. */
+:root{--ease-out:cubic-bezier(.23,1,.32,1);--t-fast:140ms;--t-med:220ms}
+html{-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a,button,[role="button"],summary,select,label{touch-action:manipulation}
+h1,h2,h3,.pagehead p{text-wrap:balance}
+p{text-wrap:pretty}
+::selection{background:color-mix(in srgb,var(--c1) 45%,transparent)}
+
+/* named transition properties (never "all"), snappy ease-out */
+.btn,.ibtn,.chip,.seg-b,.tg,.dq,.pro-gobtn,.pro-hint,.dtab,.wishbtn,.pw-toggle{
+  transition-property:transform,background-color,border-color,color,box-shadow,opacity;transition-duration:var(--t-fast);transition-timing-function:var(--ease-out)}
+
+/* pressed state: a small, fast squeeze so taps feel acknowledged */
+.btn:active,.ibtn:active,.chip:active,.seg-b:active,.dq:active,.pro-gobtn:active,.pro-hint:active,.dtab:active,.wishbtn:active{transform:scale(.97)}
+
+/* one consistent keyboard focus ring (zero specificity, so existing component rings still win) */
+:where(a,button,[role="button"],summary,select,input,textarea,[tabindex]):focus-visible{outline:2px solid var(--c2,#22d3ee);outline-offset:3px}
+:where(input,select,textarea):focus-visible{outline-offset:1px}
+
+/* disabled + loading (set aria-busy="true" on a .btn while it works) */
+button:disabled,.btn[disabled],.btn[aria-disabled="true"]{opacity:.5;cursor:not-allowed}
+.btn[aria-busy="true"]{position:relative;color:transparent!important;pointer-events:none}
+.btn[aria-busy="true"]::after{content:"";position:absolute;inset:0;margin:auto;width:16px;height:16px;border-radius:50%;
+  border:2px solid rgba(4,16,28,.28);border-top-color:#04101c;animation:fin-spin .7s linear infinite}
+.btn.ghost[aria-busy="true"]::after{border-color:rgba(255,255,255,.3);border-top-color:#fff}
+@keyframes fin-spin{to{transform:rotate(360deg)}}
+
+/* touch devices: comfortable targets, and no zoom-on-focus in form fields */
+@media (pointer:coarse){
+  .chip{min-height:40px}
+  .btn.sm,.btn.small{min-height:40px}
+  .link{display:inline-flex;align-items:center;min-height:40px}
+  .tg{display:inline-flex;align-items:center;min-height:36px}
+  .pw-toggle{min-height:40px;min-width:48px}
+  header .brand{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+  input,select,textarea{font-size:max(16px,1em)}
+}
+
+/* reduced motion: finish instantly, no looping */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}

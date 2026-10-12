@@ -83,3 +83,6 @@ Fixed: "Open color studio" in Settings (panel was closed by the site's own outsi
 
 ## Entrance flow check: DONE (33 UI checks at 390/768/1280 px)
 Verified the existing flow galaxy -> entrance (solar system + portal) -> ENTER -> site. Fixed one bug: the first-visit guide opened over the galaxy screen. Only `galaxy.js` changed. `welcome.js`, `welcome.css`, `alethea.js` untouched.
+
+## Stage 17 (audit + small refinements): DONE
+Automated crawl of all 17 routes at 390 px (and 8 at 1280 px): no JS errors, no failed requests, no horizontal overflow, no images without alt, no unnamed buttons/links, no unlabeled inputs. Footer links `#/youtube|discord|instagram` are intentional deep links (verified: they land on their Community section). Security scan: no secrets in frontend (only the public Supabase key), every `_blank` link has `noopener`, `innerHTML` only used for fixed SVG. Fixed: logo tap target on narrow phones (was 28 px, my earlier regression), "view all" links on touch, `transition: all` on chips/thumbnails. Nothing else needed: press states, input focus ring, empty states, disabled styles, tooltips and reduced motion already existed. Only `extras.css` changed.
