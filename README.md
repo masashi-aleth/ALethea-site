@@ -1,7 +1,7 @@
 # موقع ALethea: دليل الإعداد
 
 الملفات التي ترفعها إلى GitHub (كلها في نفس المجلد الرئيسي):
-`index.html` `style.css` `aurora.css` `aurora-foundation.css` `welcome.css` `welcome.js` `multiverse.css` `multiverse.js` `polish.css` `extras.css` `extras.js` `account-sync.js` `support.js` `ops.js` `galaxy.js` `settings.js` `admin-ui.js` `universe.js` `menu.js` `config.js` `app.js` `data.js` `alethea.js` `dashboard.js` `README.md` `CLAUDE.md` `ALETHEA_PROGRESS.md`.
+`index.html` `style.css` `aurora.css` `aurora-foundation.css` `welcome.css` `welcome.js` `multiverse.css` `multiverse.js` `polish.css` `extras.css` `extras.js` `account-sync.js` `support.js` `ops.js` `galaxy.js` `settings.js` `admin-ui.js` `universe.js` `menu.js` `finish.css` `finish.js` `config.js` `app.js` `data.js` `alethea.js` `dashboard.js` `README.md` `CLAUDE.md` `ALETHEA_PROGRESS.md`.
 أما `schema.sql` و`schema_products.sql` فيُشغَّلان في Supabase ولا يلزم رفعهما (ارفعهما إن أردت حفظهما بالريبو).
 
 ما يفعله كل جزء: شاشة الترحيب (`welcome.*`)، بوابات العوالم في الرئيسية (`multiverse.*`)، المتجر التجريبي (`alethea.js` و`data.js`)، لوحة تجريبية `#/dashboard` (`dashboard.js`)، لوحة أعضاء حقيقية `#/admin` (`app.js` مع Supabase).
@@ -58,3 +58,7 @@
 
 ## 14) القائمة المنظّمة وضبط الكواكب (المرحلة 16)
 `menu.js` يرتّب القائمة الرئيسية بثلاث مجموعات بعناوين: «استكشف» (الرئيسية، استكشف، المتجر، المشاريع، الأدوات، الخدمات)، «المجتمع والمساعدة» (المجتمع، الدعم، عن ALethea)، «مساحتك» (الإعدادات، لوحة التحكم، لوحة الأعضاء، العمليات، ثم الدخول/التسجيل). على الشاشات الكبيرة تظهر كثلاثة أعمدة، وعلى الموبايل كقائمة واحدة بخلفية معتمة. إصلاح: زر «افتح استوديو الألوان» في الإعدادات كان يغلق اللوحة فوراً؛ صار يفتحها بعد انتهاء النقرة. كواكب قسم الكون أُعيد ضبط مواضعها وأحجامها وعمقها، وألوانها ضمن لوحة ALethea (أزرق، بنفسجي بحلقة، سماوي، زمردي، نيلي).
+
+## 15) طبقة اللمسات النهائية وسرعة الشاشة الأولى (المرحلة 19)
+`finish.css` و`finish.js` (صغيران، كانا يُحمَّلان من `index.html` لكن غير موثّقين): انتقالات قصيرة بخصائص محددة، ضغطة خفيفة عند اللمس، إطار تركيز موحّد، أحجام لمس مريحة، إيقاف الحركة لمن يطلب ذلك، وعنوان تلميح (tooltip) لأزرار الهيدر. لحذفها احذف سطري الربط من `index.html`. **ارفعهما مع بقية الملفات وإلا يطلب الموقع ملفات غير موجودة.**
+إصلاح: `welcome.js` صار أول عنصر داخل `<body>` بدل `<head>` (لا تعديل على الملف نفسه). كان ينتظر تحميل كل السكربتات، وعلى اتصال بطيء كان مؤقت الأمان (3 ثوانٍ) يكشف الموقع قبل ظهور المجرة فيُتخطّى الدخول بالكامل.
