@@ -4,7 +4,8 @@ const C = window.ALETHEA_CONFIG || {};
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const ready = v => typeof v === "string" && v && !/^PASTE/.test(v);
-const NEED_CFG = "الموقع غير مربوط بـ Supabase بعد. عدّل ملف config.js أولاً.";
+const L = (ar, en) => document.documentElement.lang === "en" ? en : ar;   // message language follows the site language
+const needCfg = () => L("الموقع غير مربوط بـ Supabase بعد. عدّل ملف config.js أولاً.", "The site is not connected to Supabase yet. Edit config.js first.");
 const back = location.origin + location.pathname.replace(/index\.html$/, "");
 
 const db = ready(C.SUPABASE_URL) && ready(C.SUPABASE_ANON_KEY) && window.supabase
@@ -22,7 +23,7 @@ function show(el, text, bad) { el.textContent = text; el.className = "msg " + (b
 // زر الانضمام
 $$(".join").forEach(a => {
   if (ready(C.DISCORD_INVITE_URL)) a.href = C.DISCORD_INVITE_URL;
-  else a.addEventListener("click", e => { e.preventDefault(); say("ضع رابط دعوة السيرفر في config.js"); });
+  else a.addEventListener("click", e => { e.preventDefault(); say(L("ضع رابط دعوة السيرفر في config.js", "Add the server invite link in config.js")); });
 });
 
 // عدد المتصلين (اختياري)
@@ -72,17 +73,17 @@ function paint() {
 // الأخطاء بالعربي
 function tr(m) {
   m = String(m || "");
-  if (/Invalid login/i.test(m)) return "البريد أو كلمة المرور غير صحيحة";
-  if (/not confirmed/i.test(m)) return "فعّل بريدك من رسالة التأكيد أولاً";
-  if (/already registered/i.test(m)) return "هذا البريد مسجّل مسبقاً";
-  if (/rate limit/i.test(m)) return "محاولات كثيرة، انتظر قليلاً ثم أعد المحاولة";
-  if (/Password should/i.test(m)) return "كلمة المرور ضعيفة، استخدم 8 أحرف على الأقل";
-  return "حدث خطأ: " + m;
+  if (/Invalid login/i.test(m)) return L("البريد أو كلمة المرور غير صحيحة", "Incorrect email or password");
+  if (/not confirmed/i.test(m)) return L("فعّل بريدك من رسالة التأكيد أولاً", "Confirm your email from the confirmation message first");
+  if (/already registered/i.test(m)) return L("هذا البريد مسجّل مسبقاً", "This email is already registered");
+  if (/rate limit/i.test(m)) return L("محاولات كثيرة، انتظر قليلاً ثم أعد المحاولة", "Too many attempts, wait a moment and try again");
+  if (/Password should/i.test(m)) return L("كلمة المرور ضعيفة، استخدم 8 أحرف على الأقل", "Weak password, use at least 8 characters");
+  return L("حدث خطأ: ", "An error occurred: ") + m;
 }
 
 // تسجيل الدخول عبر Discord
 $$("[data-discord]").forEach(b => b.onclick = async () => {
-  if (!db) return say(NEED_CFG);
+  if (!db) return say(needCfg());
   const { error } = await db.auth.signInWithOAuth({ provider: "discord", options: { redirectTo: back } });
   if (error) say(tr(error.message));
 });
@@ -94,15 +95,15 @@ $$("form[data-f]").forEach(f => f.addEventListener("submit", async e => {
   const errs = $$(".err", f), val = {}; let ok = true;
   $$("input", f).forEach((inp, i) => {
     const v = inp.value.trim(); let m = "";
-    if (!v) m = "هذا الحقل مطلوب";
-    else if (inp.type === "email" && !/^\S+@\S+\.\S+$/.test(v)) m = "اكتب بريداً صحيحاً";
-    else if (inp.name === "pass" && kind === "register" && inp.value.length < 8) m = "كلمة المرور أقصر من 8 أحرف";
+    if (!v) m = L("هذا الحقل مطلوب", "This field is required");
+    else if (inp.type === "email" && !/^\S+@\S+\.\S+$/.test(v)) m = L("اكتب بريداً صحيحاً", "Enter a valid email");
+    else if (inp.name === "pass" && kind === "register" && inp.value.length < 8) m = L("كلمة المرور أقصر من 8 أحرف", "Password is shorter than 8 characters");
     inp.classList.toggle("bad", !!m); errs[i].textContent = m; if (m) ok = false;
     val[inp.name] = inp.name === "pass" ? inp.value : v;
   });
   msg.textContent = ""; msg.className = "msg";
   if (!ok) return;
-  if (!db) return show(msg, NEED_CFG, true);
+  if (!db) return show(msg, needCfg(), true);
   btn.disabled = true;
   try {
     if (kind === "login") {
@@ -111,13 +112,13 @@ $$("form[data-f]").forEach(f => f.addEventListener("submit", async e => {
     } else {
       const { data, error } = await db.auth.signUp({ email: val.email, password: val.pass, options: { data: { username: val.name }, emailRedirectTo: back } });
       if (error) throw error;
-      if (!data.session) { show(msg, "تم إنشاء الحساب. افتح بريدك واضغط رابط التأكيد ثم سجّل الدخول."); f.reset(); }
+      if (!data.session) { show(msg, L("تم إنشاء الحساب. افتح بريدك واضغط رابط التأكيد ثم سجّل الدخول.", "Account created. Open your email, click the confirmation link, then log in.")); f.reset(); }
     }
   } catch (err) { show(msg, tr(err.message), true); }
   btn.disabled = false;
 }));
 
-$("#logout").onclick = async () => { if (db) await db.auth.signOut(); say("تم تسجيل الخروج"); location.hash = "#/"; };
+$("#logout").onclick = async () => { if (db) await db.auth.signOut(); say(L("تم تسجيل الخروج", "Logged out")); location.hash = "#/"; };
 
 // لوحة التحكم
 $$(".tabs button").forEach(b => b.onclick = () => {
@@ -128,7 +129,7 @@ $$(".tabs button").forEach(b => b.onclick = () => {
 async function renderAdmin() {
   const ok = isAdmin(), den = $("#adminDenied");
   den.hidden = ok; $("#adminBody").hidden = !ok;
-  if (!ok) { den.textContent = !db ? NEED_CFG : session ? "حسابك لا يملك صلاحية إدارة." : "هذه الصفحة للإداريين فقط. سجّل الدخول أولاً."; return; }
+  if (!ok) { den.textContent = !db ? needCfg() : session ? "حسابك لا يملك صلاحية إدارة." : "هذه الصفحة للإداريين فقط. سجّل الدخول أولاً."; return; }
   const [p, s] = await Promise.all([
     db.from("profiles").select("id,username,role,provider,created_at").order("created_at", { ascending: false }).limit(500),
     db.from("site_settings").select("key,value")
