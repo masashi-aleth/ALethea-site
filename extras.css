@@ -78,7 +78,7 @@ html.pro-lite .pcard::after{display:none}
 .gx-spin{position:absolute;inset:0;transform:rotateX(60deg);transform-style:preserve-3d}
 .gx-disc{width:100%;height:100%;animation:gxspin calc(140s/var(--speed,1)) linear infinite;will-change:transform}
 @keyframes gxspin{to{transform:rotate(360deg)}}
-.gx-core{position:absolute;left:50%;top:50%;width:24%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;background:radial-gradient(circle,#fff 0,color-mix(in srgb,var(--c2) 75%,#fff) 16%,transparent 66%);animation:breathe calc(6s/var(--speed,1)) ease-in-out infinite}
+.gx-core{position:absolute;left:50%;top:50%;width:13%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;background:radial-gradient(circle,#fff 0,#fff 12%,color-mix(in srgb,var(--c2) 55%,#fff) 34%,transparent 70%);animation:breathe calc(6s/var(--speed,1)) ease-in-out infinite}
 .scene.warp .gx{transform:scale(1.4);opacity:.12}
 .gx-nodes{position:absolute;inset:0;pointer-events:none;transform-style:flat}
 .gx-node{position:absolute;pointer-events:auto;transform:translate(-50%,-50%);display:inline-flex;align-items:center;gap:9px;min-height:44px;padding:8px 16px 8px 12px;border-radius:99px;background:var(--glass);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:var(--text);font-weight:600;font-size:.9rem;text-decoration:none;white-space:nowrap;animation:floaty calc(7s/var(--speed,1)) ease-in-out infinite;transition:border-color .2s,box-shadow .2s,scale .2s}
@@ -198,3 +198,10 @@ header #nav .nav-h{font-size:.72rem;letter-spacing:.06em;color:var(--muted);padd
 .thumbs button{transition:opacity .2s var(--ease),border-color .2s var(--ease),transform .16s var(--ease)}
 @media (max-width:430px){header .brand{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center}}
 @media (pointer:coarse){.sec-head .link{display:inline-flex;align-items:center;min-height:40px;padding-inline:6px}}
+
+/* Phase 20: Community rules as a numbered list */
+ul.rules{counter-reset:rule}
+ul.rules li{counter-increment:rule;display:flex;align-items:center;justify-content:flex-start;gap:12px}
+ul.rules li::before{content:counter(rule);flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:.8rem;font-weight:700;background:var(--grad);color:#04101c}
+/* aurora.css forces direction:rtl on the auth pages; follow the page language instead when it is English */
+#login[dir="ltr"],#register[dir="ltr"]{direction:ltr}

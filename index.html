@@ -170,35 +170,35 @@
     <div class="sec-head"><div><span class="eyebrow">Discord</span><h2 data-i18n="disc.title">Discord</h2><p data-i18n="disc.sub">قسم واحد من المجتمع، وليس كل ALethea.</p></div>
       <a class="btn join" href="#" target="_blank" rel="noopener" data-i18n="disc.join">انضم إلى Discord</a></div>
     <div class="demo-banner"><svg class="i"><use href="#i-alert"/></svg><div data-i18n="disc.sample">الوصف أدناه نموذجي ويمكن تعديله لاحقاً. رابط الدعوة وعدد المتصلين يأتيان من config.js فقط.</div></div>
-    <div dir="rtl" lang="ar">
-    <div class="grid2">
-      <div class="panel"><h3 style="margin-top:0">القنوات</h3>
+    <div id="comBody" dir="rtl" lang="ar">
+    <div class="rows">
+      <div class="row"><h3 data-x="com.row1.h">دردشة</h3><p data-x="com.row1.p">قنوات نقاش مفتوحة بجو هادئ ومنظم، مع مشرفين متواجدين.</p></div>
+      <div class="row"><h3 data-x="com.row2.h">فعاليات</h3><p data-x="com.row2.p">مسابقات وسهرات ألعاب وجلسات صوتية كل أسبوع.</p></div>
+      <div class="row"><h3 data-x="com.row3.h">مشاريع</h3><p data-x="com.row3.p">مساحة لعرض أعمالك وطلب الملاحظات من الأعضاء.</p></div>
+    </div>
+    <div class="grid2" style="margin-top:18px">
+      <div class="panel"><h3 style="margin-top:0" data-x="com.channels">القنوات</h3>
         <ul class="list">
-          <li><span># الترحيب</span><small>ابدأ من هنا</small></li>
-          <li><span># العام</span><small>نقاش حر</small></li>
-          <li><span># الألعاب</span><small>فرق وأخبار</small></li>
-          <li><span># المشاريع</span><small>اعرض عملك</small></li>
-          <li><span>🔊 غرفة الصوت</span><small>جلسات مباشرة</small></li>
+          <li><span data-x="com.c1">&#35; الترحيب</span><small data-x="com.c1d">ابدأ من هنا</small></li>
+          <li><span data-x="com.c2">&#35; العام</span><small data-x="com.c2d">نقاش حر</small></li>
+          <li><span data-x="com.c3">&#35; الألعاب</span><small data-x="com.c3d">فرق وأخبار</small></li>
+          <li><span data-x="com.c4">&#35; المشاريع</span><small data-x="com.c4d">اعرض عملك</small></li>
+          <li><span data-x="com.c5">🔊 غرفة الصوت</span><small data-x="com.c5d">جلسات مباشرة</small></li>
         </ul></div>
-      <div class="panel"><h3 style="margin-top:0">القوانين</h3>
-        <ul class="list">
-          <li>احترام جميع الأعضاء</li>
-          <li>ممنوع الإعلانات دون إذن</li>
-          <li>لا للمحتوى المسيء أو المخالف</li>
-          <li>اتبع تعليمات المشرفين</li>
+      <div class="panel"><h3 style="margin-top:0" data-x="com.rules">القوانين</h3>
+        <ul class="list rules">
+          <li data-x="com.r1">احترام جميع الأعضاء</li>
+          <li data-x="com.r2">ممنوع الإعلانات دون إذن</li>
+          <li data-x="com.r3">لا للمحتوى المسيء أو المخالف</li>
+          <li data-x="com.r4">اتبع تعليمات المشرفين</li>
         </ul></div>
     </div>
-    <div class="panel" style="margin-top:18px"><h3 style="margin-top:0">الرتب</h3>
+    <div class="panel" style="margin-top:18px"><h3 style="margin-top:0" data-x="com.roles">الرتب</h3>
       <ul class="list">
-        <li><span>المالك</span><span class="tag">إدارة كاملة</span></li>
-        <li><span>مشرف</span><span class="tag">إدارة المحادثات</span></li>
-        <li><span>عضو</span><span class="tag">وصول عام</span></li>
+        <li><span data-x="com.o">المالك</span><span class="tag" data-x="com.od">إدارة كاملة</span></li>
+        <li><span data-x="com.m">مشرف</span><span class="tag" data-x="com.md">إدارة المحادثات</span></li>
+        <li><span data-x="com.u">عضو</span><span class="tag" data-x="com.ud">وصول عام</span></li>
       </ul>
-    </div>
-    <div class="rows" style="margin-top:18px">
-      <div class="row"><h3>دردشة</h3><p>قنوات نقاش مفتوحة بجو هادئ ومنظم، مع مشرفين متواجدين.</p></div>
-      <div class="row"><h3>فعاليات</h3><p>مسابقات وسهرات ألعاب وجلسات صوتية كل أسبوع.</p></div>
-      <div class="row"><h3>مشاريع</h3><p>مساحة لعرض أعمالك وطلب الملاحظات من الأعضاء.</p></div>
     </div>
     </div>
   </div>
@@ -212,38 +212,38 @@
 <!-- LOGIN (original, Arabic) -->
 <section class="view" id="login" dir="rtl" lang="ar">
   <div class="auth panel">
-    <h2>تسجيل الدخول</h2>
-    <button class="btn discord" type="button" data-discord>المتابعة عبر Discord</button>
-    <div class="or">أو بالبريد</div>
+    <h2 data-x="login.title">تسجيل الدخول</h2>
+    <button class="btn discord" type="button" data-discord data-x="auth.discord">المتابعة عبر Discord</button>
+    <div class="or" data-x="auth.or">أو بالبريد</div>
     <form data-f="login" novalidate>
-      <label for="le">البريد الإلكتروني</label><input id="le" name="email" type="email" autocomplete="email" dir="ltr">
+      <label for="le" data-x="auth.email">البريد الإلكتروني</label><input id="le" name="email" type="email" autocomplete="email" dir="ltr">
       <div class="err"></div>
-      <label for="lp">كلمة المرور</label><input id="lp" name="pass" type="password" autocomplete="current-password" dir="ltr">
+      <label for="lp" data-x="auth.pass">كلمة المرور</label><input id="lp" name="pass" type="password" autocomplete="current-password" dir="ltr">
       <div class="err"></div>
       <div class="msg" aria-live="polite"></div>
-      <button class="btn" type="submit">دخول</button>
+      <button class="btn" type="submit" data-x="login.btn">دخول</button>
     </form>
-    <div class="alt">ليس لديك حساب؟ <a href="#/register">أنشئ حساباً</a></div>
+    <div class="alt"><span data-x="login.alt">ليس لديك حساب؟</span> <a href="#/register" data-x="login.alt2">أنشئ حساباً</a></div>
   </div>
 </section>
 
 <!-- REGISTER (original, Arabic) -->
 <section class="view" id="register" dir="rtl" lang="ar">
   <div class="auth panel">
-    <h2>إنشاء حساب</h2>
-    <button class="btn discord" type="button" data-discord>المتابعة عبر Discord</button>
-    <div class="or">أو بالبريد</div>
+    <h2 data-x="reg.title">إنشاء حساب</h2>
+    <button class="btn discord" type="button" data-discord data-x="auth.discord">المتابعة عبر Discord</button>
+    <div class="or" data-x="auth.or">أو بالبريد</div>
     <form data-f="register" novalidate>
-      <label for="rn">اسم المستخدم</label><input id="rn" name="name" type="text" autocomplete="username" dir="ltr">
+      <label for="rn" data-x="reg.name">اسم المستخدم</label><input id="rn" name="name" type="text" autocomplete="username" dir="ltr">
       <div class="err"></div>
-      <label for="re">البريد الإلكتروني</label><input id="re" name="email" type="email" autocomplete="email" dir="ltr">
+      <label for="re" data-x="auth.email">البريد الإلكتروني</label><input id="re" name="email" type="email" autocomplete="email" dir="ltr">
       <div class="err"></div>
-      <label for="rp">كلمة المرور (8 أحرف على الأقل)</label><input id="rp" name="pass" type="password" autocomplete="new-password" dir="ltr">
+      <label for="rp" data-x="reg.pass">كلمة المرور (8 أحرف على الأقل)</label><input id="rp" name="pass" type="password" autocomplete="new-password" dir="ltr">
       <div class="err"></div>
       <div class="msg" aria-live="polite"></div>
-      <button class="btn" type="submit">إنشاء الحساب</button>
+      <button class="btn" type="submit" data-x="reg.btn">إنشاء الحساب</button>
     </form>
-    <div class="alt">لديك حساب؟ <a href="#/login">سجّل الدخول</a></div>
+    <div class="alt"><span data-x="reg.alt">لديك حساب؟</span> <a href="#/login" data-x="reg.alt2">سجّل الدخول</a></div>
   </div>
 </section>
 
@@ -320,6 +320,7 @@
 <script src="admin-ui.js"></script>
 <script src="universe.js"></script>
 <script src="menu.js"></script>
+<script src="i18n-extra.js"></script>
 <script src="finish.js"></script>
 </body>
 </html>

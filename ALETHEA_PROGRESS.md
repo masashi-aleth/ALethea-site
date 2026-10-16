@@ -92,3 +92,6 @@ Entrance (`welcome.js`, `welcome.css`): solar system is bigger (up to 460 px) wi
 
 ## Stage 19 (entrance timing fix + undocumented files documented): DONE, 33+15+14+22+20+10+12+5+... UI checks passed
 Measured before/after with throttled Chromium: on a 45 KB/s connection the entrance used to be skipped completely; now it always shows (galaxy at 5.1 s there). Profile (4x CPU, load window): welcome.js 519 ms, multiverse.js 401 ms, alethea.js 275 ms, app.js 124 ms, universe.js 104 ms; JS 254 KB, CSS 86 KB, 29 requests. Open: lazy-load dashboard.js (50 KB), defer multiverse/universe work until after ENTER, English text on login/register/community, robots.txt/manifest. Real phones not tested.
+
+## Stage 20 (English on Login/Register/Community + Community organization): DONE, 30 new UI checks + 131 earlier checks re-run, all passing
+Full English-mode scan of 17 pages: only the language toggle label and the Settings language name remain Arabic (intentional), plus the owner-only `#/admin` members page. Fixed on the way: `aurora.css` forced RTL on the auth pages even in English. Community order is now: what it is -> channels + rules (numbered) -> roles; rule wording unchanged. Not tested on real phones.

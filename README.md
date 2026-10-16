@@ -1,7 +1,7 @@
 # موقع ALethea: دليل الإعداد
 
 الملفات التي ترفعها إلى GitHub (كلها في نفس المجلد الرئيسي):
-`index.html` `style.css` `aurora.css` `aurora-foundation.css` `welcome.css` `welcome.js` `multiverse.css` `multiverse.js` `polish.css` `extras.css` `extras.js` `account-sync.js` `support.js` `ops.js` `galaxy.js` `settings.js` `admin-ui.js` `universe.js` `menu.js` `finish.css` `finish.js` `config.js` `app.js` `data.js` `alethea.js` `dashboard.js` `README.md` `CLAUDE.md` `ALETHEA_PROGRESS.md`.
+`index.html` `style.css` `aurora.css` `aurora-foundation.css` `welcome.css` `welcome.js` `multiverse.css` `multiverse.js` `polish.css` `extras.css` `extras.js` `account-sync.js` `support.js` `ops.js` `galaxy.js` `settings.js` `admin-ui.js` `universe.js` `menu.js` `finish.css` `finish.js` `i18n-extra.js` `config.js` `app.js` `data.js` `alethea.js` `dashboard.js` `README.md` `CLAUDE.md` `ALETHEA_PROGRESS.md`.
 أما `schema.sql` و`schema_products.sql` فيُشغَّلان في Supabase ولا يلزم رفعهما (ارفعهما إن أردت حفظهما بالريبو).
 
 ما يفعله كل جزء: شاشة الترحيب (`welcome.*`)، بوابات العوالم في الرئيسية (`multiverse.*`)، المتجر التجريبي (`alethea.js` و`data.js`)، لوحة تجريبية `#/dashboard` (`dashboard.js`)، لوحة أعضاء حقيقية `#/admin` (`app.js` مع Supabase).
@@ -62,3 +62,7 @@
 ## 15) طبقة اللمسات النهائية وسرعة الشاشة الأولى (المرحلة 19)
 `finish.css` و`finish.js` (صغيران، كانا يُحمَّلان من `index.html` لكن غير موثّقين): انتقالات قصيرة بخصائص محددة، ضغطة خفيفة عند اللمس، إطار تركيز موحّد، أحجام لمس مريحة، إيقاف الحركة لمن يطلب ذلك، وعنوان تلميح (tooltip) لأزرار الهيدر. لحذفها احذف سطري الربط من `index.html`. **ارفعهما مع بقية الملفات وإلا يطلب الموقع ملفات غير موجودة.**
 إصلاح: `welcome.js` صار أول عنصر داخل `<body>` بدل `<head>` (لا تعديل على الملف نفسه). كان ينتظر تحميل كل السكربتات، وعلى اتصال بطيء كان مؤقت الأمان (3 ثوانٍ) يكشف الموقع قبل ظهور المجرة فيُتخطّى الدخول بالكامل.
+
+## 16) الإنجليزية في الدخول والتسجيل والمجتمع (المرحلة 20)
+`i18n-extra.js` يترجم نصوص صفحات تسجيل الدخول وإنشاء الحساب وجسم صفحة المجتمع (القنوات، القوانين، الرتب، الوصف) عبر الوسم `data-x="مفتاح"` في `index.html`؛ النص العربي يبقى هو الافتراضي والإنجليزية تُطبَّق عند تبديل اللغة، ويتبدّل الاتجاه (rtl/ltr) تلقائياً. رسائل التحقق والأخطاء والنجاح في `app.js` صارت ثنائية اللغة عبر الدالة `L(عربي, إنجليزي)`. صفحة المجتمع رُتّبت: ما هو المجتمع ← القنوات والقوانين (مرقّمة) ← الرتب، ونصوص القوانين كما كتبتها دون تغيير.
+بقي بالعربية فقط: صفحة لوحة الأعضاء `#/admin` (للمالك) ورسائلها.

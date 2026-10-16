@@ -24,15 +24,16 @@
     en: { sub: "An account is optional: you can browse without one, and signing in unlocks these.", items: ["Your theme and colors follow you across devices", "Open support tickets and follow replies", "Notifications when the team replies"], eye: "Why an account?" }
   };
   function side(panel) {
-    if ($(".auth-side", panel)) return; var sec = panel.closest("section"), l = sec && sec.lang === "en" ? "en" : "ar", t = A[l];
+    if ($(".auth-side", panel)) return; var t = A[lang()];
     var s = el("aside", "auth-side"), ul = el("ul"); s.append(el("i", "auth-orb"), el("span", "eyebrow", t.eye), el("h3", "", "ALethea"), el("p", "", t.sub));
     t.items.forEach(function (x) { ul.append(el("li", "", x)); }); s.append(ul); panel.insertBefore(s, panel.firstChild);
   }
+  function pwLabel(b, inp) { var ar = lang() !== "en", shown = inp.type !== "password"; b.textContent = shown ? (ar ? "إخفاء" : "Hide") : (ar ? "إظهار" : "Show"); }
   function pwToggle(panel) {
     $$('input[type="password"]', panel).forEach(function (inp) {
       if (inp.dataset.pw) return; inp.dataset.pw = "1"; var label = inp.id && $('label[for="' + inp.id + '"]', panel); if (!label) return;
-      var sec = panel.closest("section"), ar = !(sec && sec.lang === "en"), row = el("div", "pw-row"), b = el("button", "pw-toggle", ar ? "إظهار" : "Show"); b.type = "button"; b.setAttribute("aria-controls", inp.id);
-      b.addEventListener("click", function () { var show = inp.type === "password"; inp.type = show ? "text" : "password"; b.textContent = show ? (ar ? "إخفاء" : "Hide") : (ar ? "إظهار" : "Show"); });
+      var row = el("div", "pw-row"), b = el("button", "pw-toggle"); b.type = "button"; b.setAttribute("aria-controls", inp.id); pwLabel(b, inp);
+      b.addEventListener("click", function () { inp.type = inp.type === "password" ? "text" : "password"; pwLabel(b, inp); });
       label.replaceWith(row); row.append(label, b);
     });
   }
@@ -42,7 +43,11 @@
     quick(); auth(); var root = $("#dashRoot");
     if (root) new MutationObserver(quick).observe(root, { childList: true });
     addEventListener("hashchange", function () { setTimeout(function () { quick(); auth(); }, 40); });
-    new MutationObserver(function () { var q = $(".dash-quick"); if (q) q.remove(); quick(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+    new MutationObserver(function () {
+      var q = $(".dash-quick"); if (q) q.remove(); quick();
+      $$(".auth-side").forEach(function (n) { n.remove(); }); auth();                       // rebuild the side panel in the new language
+      $$(".pw-toggle").forEach(function (b) { var i = document.getElementById(b.getAttribute("aria-controls")); if (i) pwLabel(b, i); });
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
   }
   if (document.readyState === "complete") init(); else addEventListener("load", init);
 })();
